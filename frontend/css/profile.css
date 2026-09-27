@@ -1,0 +1,249 @@
+/* PROFILE PAGE SPECIFIC STYLES */
+
+.profile-navbar {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.profile-hero {
+    height: 45vh;
+    background: url('../assets/wadirum_sunset_bg.jpg') center/cover no-repeat;
+    position: relative;
+}
+
+.profile-hero-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(10,10,10,0) 0%, rgba(10,10,10,0.5) 50%, #0a0a0a 100%);
+}
+
+.profile-container {
+    max-width: 1000px;
+    margin: -100px auto 100px; /* overlap hero */
+    position: relative;
+    z-index: 10;
+    padding: 0 2rem;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    background: rgba(10,10,10,0.8);
+    backdrop-filter: blur(5px);
+}
+
+.avatar-circle i {
+    font-size: 3rem;
+    color: var(--gold);
+}
+
+.avatar-label {
+    font-size: 0.75rem;
+    color: #ccc;
+    text-transform: capitalize;
+    margin-bottom: 0.5rem;
+}
+
+.profile-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    margin: 0;
+    color: #fff;
+    font-weight: 400;
+}
+
+.profile-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    padding: 1rem 0;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.tab-btn:hover {
+    color: #fff;
+}
+
+.tab-btn.active {
+    color: #fff;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--gold);
+}
+
+.cards-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.profile-card {
+    background: #151515;
+    border-radius: 12px;
+    padding: 2.5rem;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.card-title {
+    font-size: 0.75rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.profile-card .input-group {
+    background: #0f0f0f;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+.profile-card label {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+.profile-card input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.875rem;
+    width: 100%;
+    outline: none;
+}
+
+.empty-state {
+    text-align: center;
+    color: #888;
+    padding: 3rem;
+    background: #151515;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.logout-container {
+    margin-left: auto; /* Push it to the far right */
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #151515;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: background 0.3s;
+    text-decoration: none;
+}
+.logout-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+.logout-btn i {
+    color: var(--gold);
+    font-size: 1.2rem;
+}
+
+/* RTL Support */
+body.rtl-active .logout-btn {
+    flex-direction: row-reverse;
+}
+body.rtl-active .profile-card input {
+    text-align: right;
+}
+body.rtl-active .input-group {
+    text-align: right;
+}
+
+/* Fix for Profile Navbar */
+.profile-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 4rem;
+}
+
+.profile-navbar .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-navbar .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.profile-navbar .nav-links a:hover {
+    color: var(--gold);
+}
+
+.profile-navbar { box-sizing: border-box; }

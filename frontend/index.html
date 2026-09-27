@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMAGH | Login</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons (for elegant, thin icons matching your design) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="stylesheet" href="css/styles.css?v=1790460280">
+
+    <script>
+        if (sessionStorage.getItem('shmagh_token')) {
+            window.location.href = 'home.html';
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Dynamic Background Image Wrapper -->
+    <div class="page-wrapper" id="pageWrapper">
+        
+        <!-- Logo -->
+        
+        <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem;">
+            <div class="logo">
+                <img src="assets/logo.png" alt="SHMAGH Logo" class="logo-img">
+            </div>
+        </nav>
+    
+
+        <main class="split-layout">
+            
+            <!-- LEFT COLUMN (Text Content) -->
+            <section class="left-content">
+                <div class="subtitle-wrapper">
+                    <span class="gold-line"></span>
+                    <span class="subtitle">DISCOVER JORDAN</span>
+                </div>
+                
+                <h1 class="main-heading">Jordan, beyond the<br>familiar.</h1>
+                
+                <p class="description">
+                    Explore its places, stories, culture, and heritage through one connected journey.
+                </p>
+            
+            </section>
+
+            <!-- RIGHT COLUMN (Forms) -->
+            <section class="right-content">
+                
+                <!-- LOGIN FORM PANEL -->
+                <div class="glass-panel" id="loginPanel">
+                    <h2>Welcome back</h2>
+                    <p class="panel-subtitle">Sign in to continue.</p>
+                    
+                    <form id="loginForm" class="auth-form">
+                        <div class="input-group">
+                            <label>EMAIL ADDRESS</label>
+                            <div class="input-wrapper">
+                                <i class="ph ph-envelope-simple"></i>
+                                <input type="email" placeholder="you@example.com" id="loginEmail">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>PASSWORD</label>
+                            <div class="input-wrapper">
+                                <i class="ph ph-lock-key"></i>
+                                <input type="password" placeholder="Enter your password" id="loginPassword">
+                                <i class="ph ph-eye toggle-password"></i>
+                            </div>
+                        </div>
+
+                        <div class="forgot-link">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="gold-btn">
+                            Login <i class="ph ph-arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <div class="panel-footer">
+                        New to SHMAGH? <button type="button" class="text-btn" id="showSignup">Create Account</button>
+                    </div>
+                </div>
+
+                <!-- SIGN UP FORM PANEL (Hidden initially) -->
+                <div class="glass-panel hidden" id="signupPanel">
+                    <h2>Create your account</h2>
+                    <p class="panel-subtitle">Start your journey.</p>
+                    
+                    <form id="signupForm" class="auth-form">
+                        <div class="input-group">
+                            <label>FULL NAME</label>
+                            <div class="input-wrapper">
+                                <i class="ph ph-user"></i>
+                                <input type="text" placeholder="Full Name" id="signupName">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>EMAIL ADDRESS</label>
+                            <div class="input-wrapper">
+                                <i class="ph ph-envelope-simple"></i>
+                                <input type="email" placeholder="Email Address" id="signupEmail">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>PASSWORD</label>
+                            <div class="input-wrapper">
+                                <i class="ph ph-lock-key"></i>
+                                <input type="password" placeholder="Password" id="signupPassword">
+                                <i class="ph ph-eye toggle-password"></i>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>CONFIRM PASSWORD</label>
+                            <div class="input-wrapper">
+                                <i class="ph ph-lock-key"></i>
+                                <input type="password" placeholder="Confirm Password" id="signupConfirmPassword">
+                                <i class="ph ph-eye toggle-password"></i>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="gold-btn">
+                            Create Account <i class="ph ph-arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <div class="panel-footer">
+                        Already have an account? <button type="button" class="text-btn" id="showLogin">Sign in</button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="page-footer">
+            © 2026 SHMAGH • The Hashemite Kingdom of Jordan
+        </footer>
+
+    </div>
+
+    <!-- Script for Toggling and Validation -->
+    <script src="js/app.js?v=3"></script>
+    <script src="js/toast.js?v=3"></script>
+    <script src="js/shared.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMAGH | The Gallery</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Google Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Global Styles & Home Specific Styles -->
+    <link rel="stylesheet" href="css/styles.css?v=1790460280">
+    <link rel="stylesheet" href="css/home.css">
+    <style>
+        body {
+            background-color: #0a0a0a;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            color: #ffffff;
+            padding-top: 100px;
+        }
+        .gallery-page-container {
+            padding: 4rem 6rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .gallery-title-wrapper {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+        }
+        .gallery-title {
+            font-family: var(--font-serif);
+            font-size: 4.5rem;
+            font-weight: 400;
+            color: #fff;
+            line-height: 1;
+        }
+        .gallery-subtitle {
+            color: var(--gold);
+            font-size: 0.65rem;
+            letter-spacing: 0.15rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .upload-btn {
+            background-color: #D3B996;
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            background-color: #e5cba7;
+        }
+        .gallery-hero {
+            width: 100%;
+            height: 55vh;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+        .gallery-hero-bottom {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hero-tags { display: flex; gap: 1rem; }
+        .hero-tags .tag {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .like-btn {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+        .like-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .like-btn.liked {
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+        }
+        .like-btn.liked i {
+            color: #ff4757;
+        }
+
+        .trending-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+        }
+        .trending-header h3 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 400;
+            color: #fff;
+        }
+        .trending-header span {
+            color: #888;
+            font-size: 0.7rem;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+        }
+        .trending-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        .trending-card {
+            height: 300px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 1.5rem;
+            transition: transform 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .trending-card:hover { transform: translateY(-8px); }
+        
+        .card-author {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+    
+        .go-back-btn:hover {
+            transform: translateX(-5px);
+            color: #fff !important;
+        }
+</style>
+
+    <script>
+        if (!sessionStorage.getItem('shmagh_token')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="home-navbar" style="background: rgba(5,5,5,0.95); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.25rem 4rem;">
+        <div class="logo">
+            <a href="home.html"><img src="assets/logo.png" alt="SHMAGH Logo" class="logo-img"></a>
+        </div>
+        
+        <div class="nav-center">
+            
+            <a href="home.html" style="color: #ffffff; text-decoration: none; font-weight: 500; font-family: 'Montserrat', sans-serif;">Home</a>
+            <a href="destinations.html" style="color: #ffffff; text-decoration: none; font-weight: 500; font-family: 'Montserrat', sans-serif;">Destinations</a>
+            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 500; font-family: 'Montserrat', sans-serif;">Profile</a>
+    
+        </div>
+        
+        <div class="nav-right">
+            <div class="lang-switch-container">
+                <span class="lang-label en-label active-lang">EN</span>
+                <label class="switch">
+                    <input type="checkbox" id="lang-toggle">
+                    <span class="slider round"></span>
+                </label>
+                <span class="lang-label ar-label">عربي</span>
+            </div>
+            <a href="#" class="profile-btn" aria-label="Profile">
+                <span class="material-symbols-outlined">person</span>
+            </a>
+        </div>
+    </nav>
+
+
+    <!-- Gallery Content -->
+    <div class="gallery-page-container">
+        <!-- Go Back Button -->
+        <a href="home.html" class="go-back-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--gold); text-decoration: none; font-size: 0.95rem; font-weight: 500; margin-bottom: 2rem; transition: transform 0.3s ease;">
+            <i class="ph ph-arrow-left" style="font-size: 1.2rem;"></i> Back to Home
+        </a>
+
+        
+        <!-- Hidden File Input for Upload -->
+        <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+
+        <!-- Header -->
+        <div class="gallery-header">
+            <div class="gallery-title-wrapper">
+                <h2 class="gallery-title">The Gallery</h2>
+                <span class="gallery-subtitle">COMMUNITY STORIES · JORDAN</span>
+            </div>
+            <button class="upload-btn" id="upload-trigger-btn">+ Upload Your Photo</button>
+        </div>
+
+        <!-- Most Liked Picture (Hero Feature) -->
+        <div class="gallery-hero" style="background-image: url('assets/deadsea_sunset_man.jpg');">
+            <div class="gallery-hero-bottom">
+                <div class="hero-tags">
+                    <span class="tag"><i class="ph-fill ph-map-pin" style="color: #ff4757;"></i> Dead Sea</span>
+                    <span class="tag"><i class="ph-fill ph-camera"></i> @Ahmad_Travels</span>
+                </div>
+                <!-- Hero Like Button -->
+                <button class="like-btn">
+                    <i class="ph ph-heart"></i> <span class="like-count">2,400</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Trending Journeys -->
+        <div class="trending-header">
+            <h3>Trending Journeys</h3>
+            <span>SELECTED BY THE COMMUNITY</span>
+        </div>
+
+        <div class="trending-grid" id="gallery-grid">
+            <!-- 5 Top Liked Photos -->
+            <div class="trending-card" style="background-image: url('assets/petra_bg.jpg');">
+                <div class="card-author"><i class="ph-fill ph-user"></i> @Sarah_J</div>
+                <button class="like-btn"><i class="ph ph-heart"></i> <span class="like-count">1,842</span></button>
+            </div>
+            <div class="trending-card" style="background-image: url('assets/explore_regions.jpg');">
+                <div class="card-author"><i class="ph-fill ph-user"></i> @Omar_99</div>
+                <button class="like-btn"><i class="ph ph-heart"></i> <span class="like-count">1,504</span></button>
+            </div>
+            <div class="trending-card" style="background-image: url('assets/explore_historical.jpg');">
+                <div class="card-author"><i class="ph-fill ph-user"></i> @HistoryBuff</div>
+                <button class="like-btn"><i class="ph ph-heart"></i> <span class="like-count">1,230</span></button>
+            </div>
+            <div class="trending-card" style="background-image: url('assets/explore_nature.jpg');">
+                <div class="card-author"><i class="ph-fill ph-user"></i> @NatureLover</div>
+                <button class="like-btn"><i class="ph ph-heart"></i> <span class="like-count">956</span></button>
+            </div>
+            <div class="trending-card" style="background-image: url('assets/culture_mansaf.jpg');">
+                <div class="card-author"><i class="ph-fill ph-user"></i> @JordanFoodie</div>
+                <button class="like-btn"><i class="ph ph-heart"></i> <span class="like-count">712</span></button>
+            </div></div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <img src="assets/logo.png" alt="SHMAGH Logo" class="footer-logo">
+                <p>Discover the untold stories of Jordan. A journey through time, culture, and nature.</p>
+                <div class="footer-socials">
+                    <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                    <a href="#"><i class="ph ph-twitter-logo"></i></a>
+                    <a href="#"><i class="ph ph-facebook-logo"></i></a>
+                    <a href="#"><i class="ph ph-youtube-logo"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Explore</h3>
+                <ul>
+                    <li><a href="#">Historical Sites</a></li>
+                    <li><a href="#">Nature & Desert</a></li>
+                    <li><a href="#">Bedouin Culture</a></li>
+                    <li><a href="#">Cities & Regions</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Traveler's Toolkit</a></li>
+                    <li><a href="#">Community Journal</a></li>
+                    <li><a href="#">FAQ & Support</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 SHMAGH. All rights reserved.</p>
+            <div class="footer-legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    
+    <script>
+        // Gallery Specific Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Like Button Logic
+            function attachLikeListeners() {
+                const likeBtns = document.querySelectorAll('.like-btn');
+                likeBtns.forEach(btn => {
+                    // Remove existing listeners to avoid duplicates if re-attached
+                    const newBtn = btn.cloneNode(true);
+                    btn.parentNode.replaceChild(newBtn, btn);
+                    
+                    newBtn.addEventListener('click', function() {
+                        const icon = this.querySelector('i');
+                        const countSpan = this.querySelector('.like-count');
+                        let currentCount = parseInt(countSpan.textContent.replace(/,/g, ''));
+
+                        if (this.classList.contains('liked')) {
+                            // UNLIKE
+                            this.classList.remove('liked');
+                            icon.classList.remove('ph-fill');
+                            icon.classList.add('ph');
+                            currentCount--;
+                        } else {
+                            // LIKE
+                            this.classList.add('liked');
+                            icon.classList.remove('ph');
+                            icon.classList.add('ph-fill');
+                            currentCount++;
+                        }
+                        
+                        countSpan.textContent = currentCount.toLocaleString('en-US');
+                    });
+                });
+            }
+            
+            attachLikeListeners();
+
+            // 2. Upload Photo Logic
+            const uploadBtn = document.getElementById('upload-trigger-btn');
+            const fileInput = document.getElementById('photo-upload');
+            const galleryGrid = document.getElementById('gallery-grid');
+
+            uploadBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const objectUrl = URL.createObjectURL(file);
+                    
+                    // Create new card element
+                    const newCard = document.createElement('div');
+                    newCard.className = 'trending-card';
+                    newCard.style.backgroundImage = `url('${objectUrl}')`;
+                    newCard.innerHTML = `
+                        <div class="card-author"><i class="ph-fill ph-user"></i> @You</div>
+                        <button class="like-btn"><i class="ph ph-heart"></i> <span class="like-count">0</span></button>
+                    `;
+                    
+                    // Add it to the top of the grid
+                    galleryGrid.insertBefore(newCard, galleryGrid.firstChild);
+                    
+                    // Re-attach listeners so the new heart button works
+                    attachLikeListeners();
+                    
+                    // Reset input
+                    fileInput.value = '';
+                }
+            });
+        });
+    </script>
+    <script src="js/toast.js?v=3"></script>
+    <script src="js/shared.js?v=3"></script>
+</body>
+</html>
+

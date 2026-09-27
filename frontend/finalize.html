@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMAGH - Finalize Your Journey</title>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Flatpickr for beautiful calendar UI -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/finalize.css">
+
+    <script>
+        if (!sessionStorage.getItem('shmagh_token')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+<body class="finalize-body">
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="home-navbar">
+        <div class="logo">
+            <a href="home.html"><img src="assets/logo.png" alt="SHMAGH" class="logo-img"></a>
+        </div>
+        
+        <div class="nav-center">
+            <a href="home.html">Home</a>
+            <a href="destinations.html">Explore</a>
+            <a href="home.html#stories">Stories</a>
+            <a href="home.html#culture">Culture</a>
+            <a href="home.html#climate">Weather</a>
+            <a href="home.html#toolkit">Toolkit</a>
+            <a href="gallery.html">Gallery</a>
+        </div>
+        
+        <div class="nav-right">
+            <div class="lang-switch-container">
+                <span class="lang-label en-label active-lang">EN</span>
+                <label class="switch">
+                    <input type="checkbox" id="lang-toggle">
+                    <span class="slider round"></span>
+                </label>
+                <span class="lang-label ar-label">عربي</span>
+            </div>
+            <a href="profile.html" class="profile-btn" aria-label="Profile">
+                <i class="ph ph-user"></i>
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="finalize-container">
+        <div class="finalize-header text-center">
+            <h1>Finalize Your Journey</h1>
+            <p class="subtitle">Selected Destinations</p>
+        </div>
+
+        <!-- SELECTED DESTINATIONS ROW -->
+        <div class="selected-destinations-row" id="selected-destinations-container">
+            <!-- Dynamically populated from JS -->
+        </div>
+
+        <!-- INPUT CONTROLS ROW -->
+        <div class="journey-controls">
+            <div class="control-group">
+                <label>Check-in</label>
+                <input type="text" id="checkin-date" placeholder="Select Date" class="flatpickr-input">
+            </div>
+            
+            <div class="control-group">
+                <label>Check-out</label>
+                <input type="text" id="checkout-date" placeholder="Select Date" class="flatpickr-input">
+            </div>
+            
+            <div class="control-group guest-control-container">
+                <label>Guests</label>
+                <input type="text" id="guests-input" placeholder="2 Adults" readonly>
+                <!-- Popover -->
+                <div class="guest-popover" id="guest-popover">
+                    <div class="guest-row">
+                        <span>Adults</span>
+                        <div class="counter">
+                            <button type="button" id="adults-minus"><i class="ph ph-minus"></i></button>
+                            <span id="adults-count">2</span>
+                            <button type="button" id="adults-plus"><i class="ph ph-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="guest-row">
+                        <span>Children</span>
+                        <div class="counter">
+                            <button type="button" id="children-minus"><i class="ph ph-minus"></i></button>
+                            <span id="children-count">0</span>
+                            <button type="button" id="children-plus"><i class="ph ph-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="guest-row">
+                        <span>Rooms</span>
+                        <div class="counter">
+                            <button type="button" id="rooms-minus"><i class="ph ph-minus"></i></button>
+                            <span id="rooms-count">1</span>
+                            <button type="button" id="rooms-plus"><i class="ph ph-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Budget (Optional)</label>
+                <select id="budget-input">
+                    <option value="Not Specified">Select Budget</option>
+                    <option value="$1000 - $3000">$1000 - $3000</option>
+                    <option value="$3000 - $6000" selected>$3000 - $6000</option>
+                    <option value="$6000+">$6000+</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- SEARCH HOTELS -->
+        <div class="hotel-search-wrapper">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="text" id="hotel-search-input" placeholder="Search luxury hotels...">
+        </div>
+
+        <!-- HOTEL GRID -->
+        <div class="hotel-grid" id="hotel-grid">
+            <!-- Dynamically populated -->
+        </div>
+
+        <!-- CONFIRM BUTTON -->
+        <div class="confirm-wrapper">
+            <button class="gold-btn-solid confirm-btn" id="confirm-journey-btn">Confirm</button>
+        </div>
+    </main>
+
+    <!-- TICKET PANEL -->
+    <div id="ticket-overlay" class="ticket-overlay"></div>
+    <div id="ticket-panel" class="ticket-panel">
+        <div class="ticket-header">
+            <h2>Your Journey Ticket <i class="ph-fill ph-ticket"></i></h2>
+            <button id="close-ticket-btn" class="close-btn"><i class="ph ph-x"></i></button>
+        </div>
+        
+        <div class="ticket-body">
+            <!-- Trip Summary -->
+            <div class="ticket-summary">
+                <div class="ticket-row"><i class="ph ph-calendar"></i> <span id="ticket-dates">Select dates</span></div>
+                <div class="ticket-row"><i class="ph ph-users"></i> <span id="ticket-guests">2 Adults</span></div>
+                <div class="ticket-row"><i class="ph ph-wallet"></i> <span id="ticket-budget">Standard</span></div>
+                <div class="ticket-row"><i class="ph ph-bed"></i> <span id="ticket-hotel">No hotel selected</span></div>
+                <div class="ticket-row"><i class="ph ph-map-pin"></i> <span id="ticket-places">Loading...</span></div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="ticket-chat-area" id="ticket-chat-area">
+                <div class="chat-message ai-message">
+                    <strong>AI Travel Concierge</strong>
+                    <p>Ready to generate your custom itinerary? Click the button below, or tell me any specific requirements first!</p>
+                </div>
+            </div>
+
+            <!-- User Feedback Input -->
+            <div class="ticket-input-area">
+                <input type="text" id="chat-feedback-input" placeholder="E.g., I want a relaxed pace, focus on history...">
+            </div>
+        </div>
+        
+        <div class="ticket-footer">
+            <button id="ticket-generate-btn" class="gold-btn-solid">
+                <i class="ph-fill ph-magic-wand"></i> Generate Journey
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/shared.js"></script>
+    <script src="js/finalize.js"></script>
+</body>
+</html>

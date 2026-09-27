@@ -1,0 +1,471 @@
+﻿/* ==========================================
+   DISCOVER DESTINATIONS PAGE STYLES
+========================================== */
+.destinations-body {
+    background-color: #0d0c0b;
+    color: #fff;
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    overflow-y: auto !important; /* Override global lock */
+}
+
+/* NAVBAR */
+.dest-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 4rem;
+    box-sizing: border-box;
+}
+
+.dest-navbar .logo {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--gold);
+    letter-spacing: 0.2rem;
+}
+
+.dest-navbar .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    align-items: center;
+}
+
+.dest-navbar .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.dest-navbar .nav-links a:hover {
+    color: var(--gold);
+}
+
+.lang-switch-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.lang-switch-container span {
+    transition: color 0.3s ease;
+}
+.active-lang {
+    color: #fff;
+}
+.lang-switch-container span:not(.active-lang):not(:nth-child(2)) {
+    color: #888;
+}
+
+/* HEADER */
+.dest-header {
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+}
+
+.dest-header h1 {
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.dest-header p {
+    color: #aaa;
+    font-size: 1rem;
+}
+
+/* TOOLBAR */
+.dest-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    margin: 0 6rem 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.8rem 1.2rem;
+    border-radius: 25px;
+    width: 300px;
+}
+
+.search-box i {
+    color: #888;
+    margin-right: 0.8rem;
+    font-size: 1.2rem;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    outline: none;
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+}
+
+.search-box input::placeholder {
+    color: #888;
+}
+
+.filter-pills {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.filter-pill {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-pill:hover, .filter-pill.active {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #1a1a1a;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    border-radius: 8px;
+    z-index: 1;
+    top: 100%;
+    right: 0;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: #fff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(166, 149, 121, 0.2);
+    color: var(--gold);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.your-journey-btn {
+    padding: 0.8rem 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+/* GRID */
+.dest-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    padding: 0 6rem 6rem;
+}
+
+.dest-card {
+    position: relative;
+    height: 550px;
+    border-radius: 16px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dest-card .fav-btn {
+    align-self: flex-end;
+    margin: 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.dest-card .fav-btn:hover {
+    color: var(--gold);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.dest-card-bottom {
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.8) 60%, transparent 100%);
+    padding: 2.5rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.dest-card-bottom h3 {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.dest-card-bottom p {
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+}
+
+.dest-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dest-price {
+    font-size: 0.9rem;
+    color: #eee;
+}
+
+.dest-map-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.add-btn {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.add-btn:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+/* Toggle Switch specific to destinations */
+.switch input:checked + .slider {
+    background-color: var(--gold);
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+.switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* ==========================================
+   JOURNEY SIDEBAR & CREATIVE HOVERS
+========================================== */
+.dest-card {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+.dest-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+}
+
+.your-journey-btn {
+    position: relative;
+}
+.journey-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #e74c3c;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.journey-badge.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.journey-sidebar {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 400px;
+    max-width: 100vw;
+    height: 100vh;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(166, 149, 121, 0.2);
+    z-index: 10001; /* Above map modal */
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -15px 0 40px rgba(0,0,0,0.8);
+}
+.journey-sidebar.open {
+    right: 0;
+}
+.sidebar-header {
+    padding: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.sidebar-header h2 {
+    font-family: var(--font-serif);
+    color: var(--gold);
+    font-size: 2rem;
+}
+.sidebar-close {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sidebar-close:hover {
+    background: #e74c3c;
+    transform: rotate(90deg);
+}
+.sidebar-content {
+    padding: 2rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.empty-state {
+    color: #888;
+    text-align: center;
+    margin-top: 3rem;
+    line-height: 1.6;
+}
+.journey-item {
+    display: flex;
+    gap: 1rem;
+    background: rgba(255,255,255,0.03);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+}
+.journey-item:hover {
+    background: rgba(255,255,255,0.08);
+}
+.journey-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+.journey-item-info {
+    flex-grow: 1;
+}
+.journey-item-info h4 {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.05rem;
+}
+.journey-item-info p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #aaa;
+}
+.remove-item {
+    color: #888;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+.remove-item:hover {
+    color: #e74c3c;
+}
+.sidebar-footer {
+    padding: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.6);
+}
+.total-cost {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.generate-btn {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}

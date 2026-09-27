@@ -1,0 +1,359 @@
+.finalize-body {
+    background-color: #000;
+    color: #f5f5f0;
+    min-height: 100vh;
+    padding-top: 100px; /* Account for fixed navbar */
+    overflow-y: auto; /* Allow scrolling */
+    overflow-x: hidden;
+}
+
+.finalize-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.finalize-header h1 {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+}
+
+.finalize-header .subtitle {
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 2rem;
+}
+
+/* Selected Destinations Pills */
+.selected-destinations-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.dest-pill {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--gold);
+    border-radius: 30px;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    color: var(--text-white);
+}
+
+.dest-pill button {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+}
+
+.dest-pill button:hover {
+    color: var(--gold);
+}
+
+/* Controls Row */
+.journey-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: space-between;
+}
+
+.control-group {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+}
+
+.control-group label {
+    display: block;
+    color: #888;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.control-group input, 
+.control-group select {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-white);
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.control-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A69579' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 3rem; /* Make room for the arrow */
+}
+
+.control-group select option {
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 12px;
+}
+
+.control-group input:focus,
+.control-group select:focus {
+    border-color: var(--gold);
+}
+
+/* Guest Popover */
+.guest-control-container {
+    position: relative;
+}
+
+.guest-popover {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    z-index: 10;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.guest-popover.active {
+    display: block;
+}
+
+.guest-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.guest-row:last-child {
+    margin-bottom: 0;
+}
+
+.guest-row .counter {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 0.25rem 0.5rem;
+}
+
+.guest-row .counter button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--gold);
+}
+
+/* Search Bar */
+.hotel-search-wrapper {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.hotel-search-wrapper i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 1.2rem;
+}
+
+.hotel-search-wrapper input {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    padding: 1rem 1rem 1rem 3rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.hotel-search-wrapper input:focus {
+    border-color: var(--gold);
+}
+
+/* Hotel Grid */
+.hotel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.hotel-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    overflow: hidden;
+    height: 200px;
+}
+
+.hotel-card img {
+    width: 40%;
+    object-fit: cover;
+}
+
+.hotel-info {
+    padding: 1rem;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hotel-info .stars {
+    color: var(--gold);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.hotel-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.hotel-info .location {
+    color: #aaa;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.hotel-info .desc {
+    font-size: 0.8rem;
+    color: #ccc;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.hotel-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.hotel-price {
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.hotel-price span {
+    font-size: 0.8rem;
+    color: #888;
+    font-weight: normal;
+}
+
+.select-hotel-btn {
+    background-color: var(--gold);
+    color: #000;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.select-hotel-btn:hover {
+    background-color: #d4af37;
+    transform: translateY(-2px);
+}
+
+.select-hotel-btn.selected {
+    background-color: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+}
+
+/* Confirm Button */
+.confirm-wrapper {
+    text-center: center;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 4rem;
+}
+
+.confirm-btn {
+    width: 100%;
+    max-width: 600px;
+    font-size: 1.5rem;
+    padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    .hotel-grid {
+        grid-template-columns: 1fr;
+    }
+    .hotel-card {
+        flex-direction: column;
+        height: auto;
+    }
+    .hotel-card img {
+        width: 100%;
+        height: 200px;
+    }
+    .hotel-info {
+        width: 100%;
+    }
+}
+
+
+/* --- TICKET PANEL --- */
+.ticket-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
+.ticket-overlay.active { opacity: 1; visibility: visible; }
+.ticket-panel { position: fixed; top: 0; right: -500px; width: 450px; max-width: 100%; height: 100vh; background: #0a0a0a; border-left: 1px solid rgba(255,255,255,0.1); box-shadow: -5px 0 30px rgba(0,0,0,0.8); z-index: 1001; transition: right 0.4s cubic-bezier(0.25,1,0.5,1); display: flex; flex-direction: column; }
+.ticket-panel.active { right: 0; }
+.ticket-header { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+.ticket-header h2 { font-family: var(--font-heading); color: var(--gold); font-size: 1.5rem; margin: 0; }
+.ticket-header .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+.ticket-header .close-btn:hover { color: var(--gold); transform: rotate(90deg); }
+.ticket-body { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+.ticket-summary { background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; border: 1px dashed var(--gold); font-size: 0.9rem; color: #ccc; }
+.ticket-row { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem; }
+.ticket-row:last-child { margin-bottom: 0; }
+.ticket-row i { color: var(--gold); margin-top: 3px; }
+.ticket-chat-area { flex: 1; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; min-height: 200px; }
+.chat-message { background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.4; color: #ddd; }
+.ai-message { border-left: 3px solid var(--gold); }
+.user-message { border-right: 3px solid #ccc; background: rgba(255,255,255,0.1); text-align: right; }
+.chat-message strong { color: var(--gold); display: block; margin-bottom: 0.5rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+.user-message strong { color: #fff; }
+.ticket-input-area input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 1rem; border-radius: 8px; font-size: 0.9rem; outline: none; }
+.ticket-input-area input:focus { border-color: var(--gold); }
+.ticket-footer { padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
+.ticket-footer button { width: 100%; font-size: 1.1rem; padding: 1rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }

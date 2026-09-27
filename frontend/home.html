@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMAGH | Discover</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Google Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Global Styles & Home Specific Styles -->
+    <link rel="stylesheet" href="css/styles.css?v=1790460280">
+    <link rel="stylesheet" href="css/home.css">
+
+    <script>
+        if (!sessionStorage.getItem('shmagh_token')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+<body class="home-body">
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero-section">
+        
+        <!-- Navbar -->
+        <nav class="home-navbar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="SHMAGH" class="logo-img">
+            </div>
+            
+            <div class="nav-center">
+                <a href="#home" style="color: #ffffff;" class="active">Home</a>
+                <a href="#explore">Explore</a>
+                <a href="#stories">Stories</a>
+                <a href="#culture">Culture</a>
+                <a href="#climate">Weather</a>
+                <a href="#toolkit">Toolkit</a>
+                <a href="#journal">Gallary</a>
+                <a href="#" id="nav-converter">Converter</a>
+            </div>
+            
+            <div class="nav-right">
+                <div class="lang-switch-container">
+                    <span class="lang-label en-label active-lang">EN</span>
+                    <label class="switch">
+                        <input type="checkbox" id="lang-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="lang-label ar-label">العربية</span>
+                </div>
+                <a href="profile.html" class="profile-btn" aria-label="Profile">
+                    <span class="material-symbols-outlined">person</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Center Content -->
+        <div class="hero-content">
+            
+            
+            <h1 class="main-heading center-heading">A country with<br>more than one story.</h1>
+            <p class="description center-description">Explore places, stories, culture, and heritage through one connected journey.</p>
+            
+            <div class="hero-buttons">
+                <a href="#explore" class="gold-btn-solid" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Explore Jordan</a>
+                <a href="destinations.html" class="outline-btn" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Start Your Journey</a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator (Interactive Button) -->
+        <a href="#explore" class="scroll-indicator">
+            <span class="scroll-text">SCROLL TO DISCOVER</span>
+            <div class="scroll-track">
+                <div class="scroll-progress"></div>
+            </div>
+        </a>
+
+    </section>
+
+    <!-- EXPLORE JORDAN SECTION -->
+    <section class="explore-section" id="explore">
+        <div class="explore-header">
+            <div class="subtitle-wrapper">
+                <span class="gold-line"></span>
+                <span class="subtitle">DISCOVER THE KINGDOM</span>
+            </div>
+            <h2 class="section-heading">Explore Jordan</h2>
+            <p class="section-description">From ancient cities to landscapes shaped by time.</p>
+        </div>
+
+        <div class="cards-grid">
+            
+            <!-- Card 1: Historical -->
+            <div class="category-card" style="background-image: url('assets/explore_historical.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3>HISTORICAL</h3>
+                    <a href="destinations.html?category=Historical" class="card-btn" style="text-decoration: none;">EXPLORE <i class="ph ph-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Card 2: Nature -->
+            <div class="category-card" style="background-image: url('assets/explore_nature_new.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3>NATURE</h3>
+                    <a href="destinations.html?category=Nature" class="card-btn" style="text-decoration: none;">EXPLORE <i class="ph ph-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Card 3: Religious Heritage -->
+            <div class="category-card" style="background-image: url('assets/explore_religious_new.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3>RELIGIOUS HERITAGE</h3>
+                    <a href="destinations.html?category=Religious" class="card-btn" style="text-decoration: none;">EXPLORE <i class="ph ph-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Card 4: Culture & Entertainment -->
+            <div class="category-card" style="background-image: url('assets/explore_culture.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3>CULTURE & ENTERTAINMENT</h3>
+                    <a href="destinations.html?category=Culture" class="card-btn" style="text-decoration: none;">EXPLORE <i class="ph ph-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Card 5: Regions -->
+            <div class="category-card" style="background-image: url('assets/explore_regions.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3>REGIONS</h3>
+                    <a href="destinations.html?category=Regions" class="card-btn" style="text-decoration: none;">EXPLORE <i class="ph ph-arrow-right"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- STORIES OF JORDAN SECTION -->
+    <section id="stories" class="stories-section">
+        
+        <!-- Left Sidebar Navigation -->
+        <div class="stories-sidebar">
+            <h2 class="stories-heading">Stories of<br>Jordan</h2>
+            <hr class="sidebar-divider">
+            
+            <ul class="stories-list">
+                <li class="active">
+                    <span class="story-num">1.</span> Petra 
+                    <span class="active-label">active</span>
+                </li>
+                <li>
+                    <span class="story-num">2.</span> Umm Qais
+                </li>
+                <li>
+                    <span class="story-num">3.</span> Romanian Theater
+                </li>
+            </ul>
+            <hr class="sidebar-divider-bottom">
+        </div>
+
+        <!-- Right Content Panel -->
+        <div class="stories-content">
+            <div class="story-glass-card">
+                <h3 class="story-title">The city carved into<br>stone.</h3>
+                <p>Petra was shaped by the Nabataeans, who carved temples, tombs, and pathways directly into rose-red sandstone. Entering through the Siq reveals a city where craft, trade, and memory remain embedded in the land.</p>
+                <p>Beyond its monuments, Petra carries the stories of people who crossed the desert and made this place a meeting point of cultures. Its enduring silence is part of its power.</p>
+                
+                <button id="read-story-btn" class="gold-btn-solid rounded-btn">Read Full Story &rarr;</button>
+            </div>
+        </div>
+        
+    </section>
+
+    <!-- CULTURE SECTION -->
+    <section id="culture" class="culture-section">
+        <!-- Header -->
+        <div class="culture-header">
+            <h2>A culture that lives in the details.</h2>
+        </div>
+
+        <!-- 3-Panel Split -->
+        <div class="culture-panels">
+            
+            <!-- Panel 1: Mansaf -->
+            <div class="culture-card" style="background-image: url('assets/culture_mansaf.jpg');">
+                <div class="culture-card-overlay"></div>
+                <div class="culture-content">
+                    <h3 class="culture-title">The Mansaf</h3>
+                    <div class="culture-hover-text">
+                        <p>More than just a dish, Mansaf is a symbol of Jordanian hospitality and generosity. Made with tender lamb cooked in fermented dried yogurt (jameed), it brings families and communities together in celebration and respect.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 2: Shemagh -->
+            <div class="culture-card" style="background-image: url('assets/story_bedouin_bg.jpg');">
+                <div class="culture-card-overlay"></div>
+                <div class="culture-content">
+                    <h3 class="culture-title">The Shemagh</h3>
+                    <div class="culture-hover-text">
+                        <p>The red and white checkered Shemagh is a proud emblem of Jordanian heritage. Beyond protecting against the harsh desert climate, its unique tasseled edges (hadab) signify prestige, honor, and a deep connection to Bedouin roots.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: Embroidery -->
+            <div class="culture-card" style="background-image: url('assets/explore_culture.jpg');">
+                <div class="culture-card-overlay"></div>
+                <div class="culture-content">
+                    <h3 class="culture-title">Traditional Embroidery</h3>
+                    <div class="culture-hover-text">
+                        <p>Jordanian embroidery (Tatreez) is a rich visual language. Every cross-stitch pattern, color palette, and motif tells a story of the woman's region, social status, and family history, preserving ancient traditions stitch by stitch.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CLIMATE & CONDITIONS SECTION -->
+    <section id="climate" class="climate-section">
+        <div class="climate-container">
+            <div class="climate-header">
+                <h2>Weather ☁️</h2>
+                <p>Plan your journey across Jordan with perfect timing.</p>
+            </div>
+            
+            <div class="climate-content">
+                <!-- Left: 7 Day Forecast -->
+                <div class="forecast-panel">
+                    <div class="forecast-header">
+                        <span class="forecast-label">7-DAY FORECAST</span>
+                        <span class="forecast-label-right">HIGH / LOW &middot; &deg;C</span>
+                    </div>
+                    <ul class="forecast-list" id="forecast-list">
+                        <li style="padding: 1.5rem 0; color: var(--gold);">Loading live forecast...</li>
+                    </ul>
+                </div>
+
+                <!-- Right: Current Conditions Glass Card -->
+                <div class="current-conditions-card story-glass-card">
+                    <span class="card-supertitle">ACROSS JORDAN</span>
+                    <h3 class="card-title">Current Conditions</h3>
+                    <ul class="current-list" id="current-list">
+                        <li style="padding: 1.5rem 0; color: var(--gold);">Loading live data...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRAVELER'S TOOLKIT SECTION -->
+    <section id="toolkit" class="toolkit-section">
+        <div class="toolkit-header">
+            <span class="toolkit-supertitle">CURATED ESSENTIALS - JORDAN</span>
+            <h2>The Traveler's Toolkit</h2>
+            <p>Essential local apps to navigate Jordan with ease.</p>
+        </div>
+
+        <div class="toolkit-grid">
+            
+            <!-- App 1 -->
+            <div class="app-card">
+                <div class="app-icon"><img src="assets/logo_talabat.png" alt="Talabat Logo"></div>
+                <h3>Talabat</h3>
+                <span class="app-tag">FOOD DELIVERY</span>
+                <p class="app-desc">The most popular food delivery platform in Jordan. Order authentic local cuisine directly to your location.</p>
+                <a href="https://www.talabat.com/jordan" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+            </div>
+
+            <!-- App 2 -->
+            <div class="app-card">
+                <div class="app-icon"><img src="assets/logo_petraride.png" alt="Petra Ride Logo"></div>
+                <h3>Petra Ride</h3>
+                <span class="app-tag">RIDE HAILING</span>
+                <p class="app-desc">A trusted local ride-hailing service. Safe, reliable, and the easiest way to navigate inside the city.</p>
+                <a href="https://www.petraride.com/" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+            </div>
+
+            <!-- App 3 -->
+            <div class="app-card">
+                <div class="app-icon"><img src="assets/logo_jett.webp" alt="JETT Logo"></div>
+                <h3>JETT</h3>
+                <span class="app-tag">INTERCITY TRAVEL</span>
+                <p class="app-desc">Premium intercity bus travel. The most comfortable and affordable way to travel between Amman, Petra, and Aqaba.</p>
+                <a href="https://www.jett.com.jo/" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+            </div>
+
+            <!-- App 4 -->
+            <div class="app-card">
+                <div class="app-icon"><img src="assets/logo_vision.png" alt="Amman Vision Bus Logo"></div>
+                <h3>Amman Vision Bus</h3>
+                <span class="app-tag">PUBLIC TRANSIT</span>
+                <p class="app-desc">Navigate the capital like a local. Track routes and schedules for Amman's modern public transit network.</p>
+                <a href="https://ammanbus.jo/" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+            </div>
+
+            <!-- App 5 -->
+            <div class="app-card">
+                <div class="app-icon"><img src="assets/logo_jamal.jpg" alt="Jamal Rent A Car Logo"></div>
+                <h3>Jamal Rent A Car</h3>
+                <span class="app-tag">CAR RENTAL</span>
+                <p class="app-desc">Explore Jordan at your own pace. Reliable, top-rated local car rentals for your desert highway road trips.</p>
+                <!-- Using a search link since Jamal is likely a local agency without a main global app portal -->
+                <a href="https://apps.apple.com/us/app/jamal-car-rental-jordan/id6444405569?l=pt-BR" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- COMMUNITY PHOTO JOURNAL SECTION -->
+    <section id="journal" class="journal-section">
+        <div class="journal-header">
+            <div class="journal-supertitle">
+                <span class="line"></span>
+                <span>COMMUNITY PHOTO JOURNAL</span>
+                <span class="line"></span>
+            </div>
+            <h2>Jordan Through Your Eyes</h2>
+        </div>
+
+        <div class="masonry-gallery">
+            <!-- Utilizing our existing high-quality assets to create a Pinterest-style masonry grid -->
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/story_bedouin_bg.jpg" alt="Bedouin Portrait">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 842</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/explore_historical.jpg" alt="Historical Site">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 1.2k</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/petra_bg.jpg" alt="Petra at Night">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 3.5k</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/explore_culture.jpg" alt="Traditional Embroidery">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 529</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/culture_mansaf.jpg" alt="Mansaf Dish">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 914</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/explore_nature_new.jpg" alt="Wadi Rum Nature">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 2.1k</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/explore_regions.jpg" alt="Dead Sea Region">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 673</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/wadirum_sunset_bg.jpg" alt="Wadi Rum Sunset">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 4.8k</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/wadirum_bg.jpg" alt="Wadi Rum Night">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 1.5k</div>
+            </div>
+            <div class="masonry-item">
+                <img loading="lazy" src="assets/explore_religious_new.jpg" alt="Religious Site">
+                <div class="photo-likes"><i class="ph-fill ph-heart"></i> 892</div>
+            </div>
+        </div>
+
+        <div class="journal-action">
+            <a href="gallery.html" class="gold-btn" style="text-decoration: none;">Share Your Journey <i class="ph ph-arrow-right"></i> <i class="ph ph-star"></i></a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <!-- Brand & Socials -->
+            <div class="footer-brand">
+                <img src="assets/logo.png" alt="SHMAGH Logo" class="footer-logo">
+                <p>Discover the untold stories of Jordan. A journey through time, culture, and nature.</p>
+                <div class="footer-socials">
+                    <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                    <a href="#"><i class="ph ph-twitter-logo"></i></a>
+                    <a href="#"><i class="ph ph-facebook-logo"></i></a>
+                    <a href="#"><i class="ph ph-youtube-logo"></i></a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="footer-links">
+                <h3>Explore</h3>
+                <ul>
+                    <li><a href="#">Historical Sites</a></li>
+                    <li><a href="#">Nature & Desert</a></li>
+                    <li><a href="#">Bedouin Culture</a></li>
+                    <li><a href="#">Cities & Regions</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Traveler's Toolkit</a></li>
+                    <li><a href="#">Community Journal</a></li>
+                    <li><a href="#">FAQ & Support</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            
+
+        </div>
+        
+        <!-- Copyright & Legal -->
+        <div class="footer-bottom">
+            <p>&copy; 2026 SHMAGH. All rights reserved.</p>
+            <div class="footer-legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/home.js?v=3"></script>
+
+    
+
+    <!-- FULL STORY MODAL -->
+    <div id="full-story-modal" class="story-modal">
+        <button class="close-story" id="close-story-btn"><i class="ph ph-x"></i></button>
+        
+        <div class="story-modal-hero" style="background-image: url('assets/petra_bg.jpg');">
+            <div class="hero-overlay"></div>
+            <h1 class="story-modal-title">Petra - The Rose City</h1>
+        </div>
+        
+        <div class="story-modal-content">
+            <div class="story-video-thumb">
+                <!-- Using a secondary petra image as thumbnail -->
+                <img loading="lazy" src="assets/explore_historical.jpg" alt="Video Thumbnail">
+                <button class="play-btn"><i class="ph-fill ph-play"></i></button>
+            </div>
+            <div class="story-text-content">
+                <h2>The Nabataeans: Masters of Rock and Water in the Heart of the Desert</h2>
+                <p>Petra flourished as the capital of the Nabataeans since the 4th century BC, at the crossroads of caravan routes between the Arabian Peninsula and the Mediterranean. From the heart of the rose mountains, they built a city combining trade, rituals, and art in a scene unlike any other.</p>
+                <p>The Nabataeans mastered water engineering in a rain-scarce environment; they carved channels, reservoirs, and dams, turning flash floods into a life resource. Their majestic facades blended Eastern traditions with Hellenistic and Roman influences.</p>
+                <p>Their legacy remains carved in stone and in the memory of the place. Today, Petra stands as a witness to a great civilization.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FULL STORY MODAL (UMM QAIS) -->
+    <div id="umm-qais-modal" class="story-modal">
+        <button class="close-story" id="close-umm-qais-btn"><i class="ph ph-x"></i></button>
+        
+        <div class="story-modal-hero" style="background-image: url('assets/umm_qais_hero.jpg');">
+            <div class="hero-overlay"></div>
+            <h1 class="story-modal-title">Umm Qais: Where History Meets Nature</h1>
+        </div>
+        
+        <div class="story-modal-content">
+            <div class="story-text-content">
+                <span style="color: var(--gold); font-size: 0.8rem; letter-spacing: 0.15rem; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 1rem;">Tale of the Place</span>
+                <p>Umm Qais is distinguished by its charming view of the Sea of Galilee and the Golan Heights. Where the remains of the ancient city embrace green plains extending to the horizon. Known in the Greek era as "Gadara", it was one of the ten Decapolis cities and a thriving center for thought, poetry, and trade.</p>
+                <p>Its paved streets and black basalt columns reveal successive layers of Greek, Roman, and Byzantine civilizations. The Western Theater, carved into volcanic stone, stands as a witness to a rich cultural life that gathered the city's people and its visitors many centuries ago.</p>
+                <p>In Umm Qais, history is inseparable from nature; between Ottoman houses, baths, and temples, scenes open up to valleys and olive orchards, and at sunset, golden light covers the ancient stones, making the city seem like a living memory telling the story of the place and the human.</p>
+            </div>
+            <div class="story-video-thumb">
+                <img loading="lazy" src="assets/umm_qais_video.jpg" alt="Umm Qais Video">
+                <button class="play-btn"><i class="ph-fill ph-play"></i></button>
+                <p style="text-align: center; color: #aaa; font-size: 0.85rem; margin-top: 1rem;">Watch Umm Qais Documentary</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FULL STORY MODAL (ROMAN THEATER) -->
+    <div id="roman-modal" class="story-modal">
+        <button class="close-story" id="close-roman-btn"><i class="ph ph-x"></i></button>
+        
+        <div class="story-modal-hero" style="background-image: url('assets/roman_theater_hero.jpg');">
+            <div class="hero-overlay"></div>
+            <div style="position: relative; z-index: 2; text-align: center;">
+                <span style="color: var(--gold); font-size: 0.8rem; letter-spacing: 0.15rem; display: block; margin-bottom: 0.5rem; font-weight: 500;">Amman Antiquities - Tale of a Place</span>
+                <h1 class="story-modal-title" style="font-size: 4rem;">The Roman Theater: Echo of History</h1>
+            </div>
+        </div>
+        
+        <div class="story-modal-content">
+            <div class="story-text-content">
+                <span style="color: var(--gold); font-size: 0.8rem; letter-spacing: 0.15rem; font-weight: 600; display: block; margin-bottom: 1rem;">Memory of the City</span>
+                <p>The Roman Theater is considered one of the most important historical landmarks in the heart of the capital Amman, and a stone witness to the city's prosperity in the Roman era. Built in the second century AD, when Amman was known as Philadelphia, to welcome thousands of spectators in a majestic architectural space embraced by Mount Al-Joufeh.</p>
+                <p>Its seating was carved into the rock with a precise curve that gives the place exceptional acoustic properties; sounds reached the upper rows with amazing clarity. At its facade stand the remains of columns and corridors as a visual rhythm telling the brilliance of the builders, while the colors of the stone change with daylight from honey to bronze.</p>
+                <p>Today, the theater remains a living space for culture and memory, where concerts and festivals sit side by side with the footsteps of visitors, in a rare meeting between contemporary Amman and its ancient past; a place not only to be seen, but to listen to the echo of a history spanning centuries.</p>
+            </div>
+            
+            <div class="roman-interactive-panel">
+                <div class="phase-tabs">
+                    <button class="phase-tab active">Phase 1</button>
+                    <button class="phase-tab">Phase 2</button>
+                    <button class="phase-tab">Phase 3</button>
+                </div>
+                
+                <div class="roman-image-container">
+                    <img loading="lazy" src="assets/gladiators.jpg" alt="Gladiators Fighting">
+                    <div class="roman-image-caption">
+                        <strong>Reenactment Scene - Philadelphia Arena</strong>
+                        <span>Second Century AD</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/converter.js?v=3"></script>
+    <script src="js/toast.js?v=3"></script>
+    <script src="js/shared.js?v=3"></script>
+</body>
+</html>

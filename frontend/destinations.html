@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMAGH - Discover Destinations</title>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="css/styles.css?v=1790460280">
+    <link rel="stylesheet" href="css/destinations.css?v=1790459131">
+
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.css' rel='stylesheet' />
+
+
+    <script>
+        if (!sessionStorage.getItem('shmagh_token')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+<body class="destinations-body">
+
+    <!-- NAVBAR -->
+    <nav class="dest-navbar">
+        <div class="logo"><img src="assets/logo.png" alt="SHMAGH" class="logo-img" style="height: 50px; width: auto;"></div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="#">Favorite</a></li>
+            <li><a href="#" id="nav-converter">Converter</a></li>
+            <li>
+                <div class="lang-switch-container">
+                    <span class="lang-label en-label active-lang">EN</span>
+                    <label class="switch">
+                        <input type="checkbox" id="lang-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="lang-label ar-label">????</span>
+                </div>
+            </li>
+            </li>
+            <li>
+                <a href="profile.html" class="profile-btn" aria-label="Profile" style="color: #fff; font-size: 1.5rem;">
+                    <i class="ph ph-user"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="dest-header">
+        <h1>Discover Destinations</h1>
+        <p>Select at least one destination to add to Your Journey to continue.</p>
+    </header>
+
+    <!-- TOOLBAR -->
+    <div class="dest-toolbar">
+        <div class="search-box">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="text" id="dest-search" placeholder="Search destinations">
+        </div>
+        
+        <div class="filter-pills">
+            <button class="filter-pill" data-filter="Historical">Historical</button>
+            <button class="filter-pill" data-filter="Nature">Nature</button>
+            <button class="filter-pill" data-filter="Religious">Religious</button>
+            <button class="filter-pill" data-filter="Culture">Culture</button>
+            <button class="filter-pill" data-filter="Regions">Regions</button>
+            
+            <div class="dropdown">
+                <button class="filter-pill dropbtn" id="direction-btn">Direction <i class="ph ph-caret-down"></i></button>
+                <div class="dropdown-content">
+                    <a href="#" data-direction="All">All Directions</a>
+                    <a href="#" data-direction="North">North</a>
+                    <a href="#" data-direction="South">South</a>
+                    <a href="#" data-direction="Central">Central</a>
+                    <a href="#" data-direction="East">East</a>
+                </div>
+            </div>
+        </div>
+
+        <button class="gold-btn-solid your-journey-btn">Your Journey <i class="ph ph-arrow-right"></i></button>
+    </div>
+
+    <!-- DESTINATIONS GRID -->
+    <main class="dest-grid" id="dest-grid">
+        <!-- Rendered via JS -->
+    </main>
+
+    <script src="js/destinations.js?v=3"></script>
+
+    <!-- Mapbox Modal -->
+    <div id="map-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="position: relative; width: 80%; height: 80%; background: #111; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+            <button id="close-map-btn" style="position: absolute; top: 1rem; right: 1rem; z-index: 2; background: rgba(0,0,0,0.5); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;"><i class="ph ph-x"></i></button>
+            <div id="map" style="width: 100%; height: 100%;"></div>
+            <div id="map-title-overlay" style="position: absolute; bottom: 2rem; left: 2rem; z-index: 2; background: rgba(0,0,0,0.7); padding: 1rem 2rem; border-radius: 8px; color: #fff; font-family: var(--font-serif); font-size: 1.5rem; border: 1px solid var(--gold);">Location</div>
+        </div>
+    </div>
+
+
+    <!-- Journey Planner Sidebar -->
+    <div id="journey-sidebar" class="journey-sidebar">
+        <div class="sidebar-header">
+            <h2>Your Journey</h2>
+            <button id="close-sidebar-btn" class="sidebar-close"><i class="ph ph-x"></i></button>
+        </div>
+        <div class="sidebar-content" id="journey-items-container">
+            <p class="empty-state">Your journey is empty.<br>Add destinations to start planning!</p>
+        </div>
+        <div class="sidebar-footer">
+            <div class="total-cost">
+                <span>Est. Starting Cost:</span>
+                <span id="journey-total" style="color: var(--gold);">0 JD</span>
+            </div>
+            <button class="gold-btn-solid generate-btn" id="real-generate-btn">Generate Itinerary <i class="ph-fill ph-magic-wand"></i></button>
+        </div>
+    </div>
+
+    <script src="js/converter.js?v=3"></script>
+    <script src="js/toast.js?v=3"></script>
+
+    <!-- AI Itinerary Result Modal -->
+    <div id="ai-modal" class="converter-overlay" style="display: none; opacity: 0; z-index: 99999;">
+        <div class="converter-box glass-panel" style="max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <div class="converter-header">
+                <h2>Your AI Itinerary <i class="ph-fill ph-magic-wand"></i></h2>
+                <button id="close-ai-modal" class="close-btn"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="converter-body" id="ai-content">
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="ph ph-spinner ph-spin" style="font-size: 3rem; color: var(--gold);"></i>
+                    <p style="margin-top: 1rem; color: #aaa;">Gemini AI is crafting your perfect journey...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/shared.js?v=3"></script>
+</body>
+</html>
