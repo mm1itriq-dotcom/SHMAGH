@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Populate Ticket Summary
         tDates.innerText = `${checkin} to ${checkout}`;
         tGuests.innerText = guestsInput.value;
-        tBudget.innerText = budget;
+        tBudget.innerText = budget ? budget + ' JOD' : 'Open Budget';
         
         if (selectedHotelId) {
             const hotel = mockHotels.find(h => h.id === selectedHotelId);
@@ -296,53 +296,113 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedHotelName = selectedHotelId ? mockHotels.find(h => h.id === selectedHotelId).name : "";
 
         try {
-            const response = await fetch('http://localhost:8000/api/generate-journey', {
+            const response = await fetch('http://127.0.0.1:8000/api/generate-journey', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    destinations: destNames,
-                    days: days,
-                    budget: budget !== "Not Specified" ? budget : "Standard",
-                    travel_style: selectedHotelId ? "Luxury Resort Stay" : "Explorer",
-                    feedback: feedback,
-                    hotel: selectedHotelName
+                    starting_location: "Amman",
+                    preferred_destinations: destNames,
+                    trip_duration_days: (checkin && checkout) ? Math.max(1, Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24))) : 3,
+                    number_of_travelers: guestData.adults || 2,
+                    budget: budget === "Not Specified" ? 1500.0 : parseFloat(budget.replace(/[^0-9.]/g, '')) || 1500.0,
+                    travel_style: [selectedHotelId ? "Luxury Resort Stay" : "Explorer"],
+                    hotel_preference: selectedHotelName || "Standard"
                 })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                let html = `<strong>AI Travel Concierge</strong><p>${data.greeting || 'Here is your custom itinerary:'}</p>`;
+                const journeyData = data.journey || data;
+                let html = '<strong>AI Travel Concierge</strong><p>Here is your highly optimized itinerary:</p>';
                 
-                if (data.itinerary && Array.isArray(data.itinerary)) {
-                    data.itinerary.forEach(day => {
-                        html += `
-                            <div style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 1rem;">
-                                <h4 style="color: #fff; margin-bottom: 0.25rem;">Day ${day.day}: ${day.location}</h4>
-                                <ul style="list-style-type: disc; margin-left: 1rem; color: #ccc; font-size: 0.85rem;">
-                                    ${day.activities.map(act => `<li>${act}</li>`).join('')}
-                                </ul>
-                                <p style="margin-top: 0.25rem; color: var(--gold); font-size: 0.85rem;">
-                                    <i class="ph ph-bed"></i> ${day.hotel_suggestion}
-                                </p>
-                            </div>
-                        `;
+                if (journeyData.recommended_trip) {
+                    html += '<p style="color: #ccc; margin-bottom: 1rem;">Optimized Route: <strong>' + journeyData.recommended_trip.route.join(' &rarr; ') + '</strong></p>';
+                }
+
+                if (journeyData.itinerary && Array.isArray(journeyData.itinerary)) {
+                    journeyData.itinerary.forEach((day) => {
+                        let locations = Array.isArray(day.locations) ? day.locations.join(', ') : day.locations || 'TBD';
+                        let activities = Array.isArray(day.activities) ? day.activities.join('<br>&bull; ') : day.activities || 'Sightseeing';
+                        
+                        html += '<div style="margin-top: 1rem; padding: 1rem; border-left: 2px solid var(--gold); background: rgba(0,0,0,0.3); border-radius: 4px;">';
+                        html += '<h4 style="color: var(--gold); margin: 0 0 0.5rem 0;">Day ' + day.day + ': ' + locations + '</h4>';
+                        html += '<div style="margin-bottom: 0.5rem;">';
+                        html += '<span style="font-size: 0.8rem; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem;">🚗 ' + (day.driving_time || 'N/A') + '</span>';
+                        html += '<span style="font-size: 0.8rem; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">💰 ' + (day.estimated_cost || 'N/A') + '</span>';
+                        html += '</div>';
+                        html += '<p style="font-size: 0.9rem; margin: 0 0 0.5rem 0;">&bull; ' + activities + '</p>';
+                        html += '</div>';
                     });
                 }
                 
+                if (journeyData.cost_analysis) {
+                    html += '<div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">';
+                    html += '<h4 style="color: var(--gold); margin-bottom: 0.5rem;">Budget Breakdown</h4>';
+                    html += '<ul style="list-style: none; padding: 0; margin: 0; color: #ccc; font-size: 0.85rem;">';
+                    html += '<li>Transport: ' + journeyData.cost_analysis.transport_cost + ' JOD</li>';
+                    html += '<li>Hotels: ' + journeyData.cost_analysis.hotel_cost + ' JOD</li>';
+                    html += '<li>Food: ' + journeyData.cost_analysis.food_cost + ' JOD</li>';
+                    html += '<li>Activities: ' + journeyData.cost_analysis.activity_cost + ' JOD</li>';
+                    html += '<li><strong style="color: #fff;">Total Estimated: ' + journeyData.cost_analysis.total_cost + ' JOD</strong></li>';
+                    html += '</ul></div>';
+                }
+                
+                // Add Save to Journal Button
+                const ticketTitle = `Journey to ${destNames.join(', ')}`;
                 html += `
-                    <div style="margin-top: 1rem; border-top: 1px solid var(--gold); padding-top: 0.5rem;">
-                        <strong style="color: #fff;">Est. Cost: <span style="color: var(--gold);">${data.total_estimated_cost || 'Variable'}</span></strong>
-                        <p style="color: #aaa; margin-top: 0.25rem; font-size: 0.8rem;">${data.closing || ''}</p>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button id="save-journal-btn" style="background: var(--gold); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-family: var(--font-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                            <i class="ph ph-book-bookmark"></i> Save to Journal
+                        </button>
                     </div>
                 `;
+                chatArea.innerHTML += '<div class="chat-message ai-message" id="ai-response-container">' + html + '</div>';
                 
-                chatArea.innerHTML += `<div class="chat-message ai-message">${html}</div>`;
+                // Add listener to the new button
+                setTimeout(() => {
+                    const saveBtn = document.getElementById('save-journal-btn');
+                    if (saveBtn) {
+                        saveBtn.addEventListener('click', async () => {
+                            saveBtn.disabled = true;
+                            saveBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Saving...';
+                            try {
+                                const res = await fetch('http://127.0.0.1:8000/api/user/journal', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify({
+                                        title: ticketTitle,
+                                        itinerary_data: journeyData
+                                    })
+                                });
+                                if (res.ok) {
+                                    saveBtn.style.background = '#27ae60';
+                                    saveBtn.innerHTML = '<i class="ph-fill ph-check-circle"></i> Saved to Journal';
+                                    showToast("Itinerary saved to your Journal!", "success");
+                                } else {
+                                    throw new Error('Failed to save');
+                                }
+                            } catch (e) {
+                                saveBtn.disabled = false;
+                                saveBtn.innerHTML = '<i class="ph ph-book-bookmark"></i> Try Again';
+                                showToast("Failed to save to journal", "error");
+                            }
+                        });
+                    }
+                }, 100);
+    
             } else {
-                chatArea.innerHTML += `<div class="chat-message ai-message"><strong style="color:red;">Error</strong><p>${data.detail || data.error || 'Failed to generate'}</p></div>`;
+                let errMsg = data.detail;
+                if (Array.isArray(errMsg)) {
+                    errMsg = errMsg.map(e => e.msg + " (" + e.loc.join('.') + ")").join(', ');
+                }
+                chatArea.innerHTML += '<div class="chat-message ai-message"><div style="background: rgba(255,0,0,0.1); padding: 1rem; border-left: 3px solid red; border-radius: 8px;"><h4 style="color: red; margin-top: 0;">ERROR</h4>' + (errMsg || JSON.stringify(data)) + '</div></div>';
             }
         } catch (error) {
             chatArea.innerHTML += `<div class="chat-message ai-message"><strong style="color:red;">Network Error</strong><p>Could not connect to AI service.</p></div>`;

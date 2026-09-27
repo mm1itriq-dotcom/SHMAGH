@@ -389,31 +389,60 @@
             fileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
-                    const objectUrl = URL.createObjectURL(file);
-                    
-                    // Create new card element
-                    const newCard = document.createElement('div');
-                    newCard.className = 'trending-card';
-                    newCard.style.backgroundImage = `url('${objectUrl}')`;
-                    newCard.innerHTML = `
-                        <div class="card-author"><i class="ph-fill ph-user"></i> @You</div>
-                        <button class="like-btn"><i class="ph ph-heart"></i> <span class="like-count">0</span></button>
-                    `;
-                    
-                    // Add it to the top of the grid
-                    galleryGrid.insertBefore(newCard, galleryGrid.firstChild);
-                    
-                    // Re-attach listeners so the new heart button works
-                    attachLikeListeners();
-                    
-                    // Reset input
-                    fileInput.value = '';
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64Data = event.target.result;
+                        
+                        // Save to DB
+                        const token = sessionStorage.getItem('shmagh_token');
+                        const authorName = sessionStorage.getItem('shmagh_name') || 'Traveler';
+                        
+                        if (!token) {
+                            showToast("Please log in to upload photos.", "error");
+                            return;
+                        }
+
+                        fetch('http://127.0.0.1:8000/api/gallery', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                image_url: base64Data,
+                                location: "Jordan",
+                                author: authorName
+                            })
+                        }).then(res => res.json()).then(data => {
+                            if (data.post) {
+                                // Create new card element
+                                const newCard = document.createElement('div');
+                                newCard.className = 'trending-card';
+                                newCard.style.backgroundImage = `url('${base64Data}')`;
+                                newCard.innerHTML = `
+                                    <div class="card-author"><i class="ph-fill ph-user"></i> @${authorName}</div>
+                                    <button class="like-btn"><i class="ph ph-heart"></i> <span class="like-count">0</span></button>
+                                `;
+                                
+                                // Add it to the top of the grid
+                                galleryGrid.insertBefore(newCard, galleryGrid.firstChild);
+                                attachLikeListeners();
+                                fileInput.value = '';
+                                showToast("Photo uploaded successfully!", "success");
+                            } else {
+                                showToast("Error: " + (data.detail || "Upload failed"), "error");
+                            }
+                        }).catch(err => {
+                            showToast("Failed to upload photo.", "error");
+                        });
+                    };
+                    reader.readAsDataURL(file);
                 }
             });
         });
     </script>
     <script src="js/toast.js?v=3"></script>
-    <script src="js/shared.js?v=3"></script>
+    <script src="js/shared.js?v=1790535007"></script>
 </body>
 </html>
 

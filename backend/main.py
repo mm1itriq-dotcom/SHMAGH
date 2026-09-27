@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from ai_engine.planner import generate_travel_plan
 import google.generativeai as genai
 import os
 import json
@@ -148,77 +149,29 @@ def get_hotels():
     hotel_ref = db.collection('hotels')
     return {"hotels": [doc.to_dict() for doc in hotel_ref.stream()]}
 
+class AIJourneyRequest(BaseModel):
+    starting_location: str = "Amman"
+    preferred_destinations: list[str] = []
+    trip_duration_days: int = 3
+    number_of_travelers: int = 2
+    budget: float = 1000.0
+    travel_style: list[str] = ["Luxury"]
+    hotel_preference: str = "Standard"
+
 @app.post("/api/generate-journey")
-def generate_journey(request: JourneyRequest, user_token=Depends(verify_jwt)):
-    """
-    Takes the user's travel inputs, sends them to Gemini AI, 
-    and returns a structured luxury itinerary in JSON format.
-    Requires JWT verification to process (or falls back for local dev).
-    """
+def generate_journey(request: AIJourneyRequest, user_token=Depends(verify_jwt)):
     if not GEMINI_API_KEY:
         return {"error": "Gemini API Key is missing."}
     
-    prompt = f"""
-    You are an expert luxury travel concierge for Jordan. 
-    Create a beautiful {request.days}-day travel itinerary for a user visiting these destinations: {', '.join(request.destinations)}.
-    Their budget is {request.budget}.
-    Their travel style is: "{request.travel_style}".
-    """
-    if request.hotel:
-        prompt += f"\nThe user has specifically selected this hotel: {request.hotel}. Please ensure this hotel is heavily featured in the itinerary.\n"
-        
-    prompt += """
-    Make sure to give expert advice on:
-    1. The best way to start and end the trip.
-    2. The best airport/places to land.
-    3. Recommendations for breakfast spots and luxury dining.
-    """
-    
-    if request.feedback:
-        prompt += f"\nTHE USER PROVIDED THE FOLLOWING FEEDBACK ON A PREVIOUS ITERATION. PLEASE ADJUST THE ITINERARY ACCORDINGLY:\n\"{request.feedback}\"\n"
-
-    prompt += """
-    Respond ONLY with a valid JSON object matching this exact structure:
-    {
-        "greeting": "A short, luxurious welcome message summarizing the trip approach (landing, start/end).",
-        "itinerary": [
-            {
-                "day": 1,
-                "location": "Name of the place",
-                "activities": ["Activity 1 (e.g. Breakfast at X)", "Activity 2"],
-                "hotel_suggestion": "Suggested hotel based on budget and user selection"
-            }
-        ],
-        "total_estimated_cost": "Estimated cost string",
-        "closing": "A short sign-off message."
-    }
-    """
-    
+    req_data = request.dict()
     try:
+        import google.generativeai as genai
         model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(prompt)
-        
-        response_text = response.text.strip()
-        if response_text.startswith("```json"):
-            response_text = response_text[7:-3]
-        elif response_text.startswith("```"):
-            response_text = response_text[3:-3]
-            
-        journey_data = json.loads(response_text)
-        
-        # --- UUID Injection (Hackathon Requirement) ---
-        journey_data["journey_id"] = str(uuid.uuid4())
-        
-        # If the user passed a valid JWT token, link their User ID to this journey
-        if user_token:
-            journey_data["user_id"] = user_token.get("uid")
-            
-        return journey_data
-        
+        plan = generate_travel_plan(req_data, model)
+        return {"journey": plan}
     except Exception as e:
         return {"error": str(e)}
 
-# --- Gallery Models ---
 class GalleryPostRequest(BaseModel):
     image_url: str
     location: str
@@ -242,14 +195,24 @@ def get_current_user(user_token=Depends(verify_jwt)):
 
 
 @app.post("/api/gallery")
-def create_gallery_post(req: GalleryPostRequest):
+def create_gallery_post(req: GalleryPostRequest, user_token=Depends(verify_jwt)):
     if db is None:
         raise HTTPException(status_code=500, detail="Database not connected")
         
+    uid = user_token.get("uid")
+    if not uid:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+        
     post_id = str(uuid.uuid4())
+    
+    # Compress or truncate if too large? 
+    # Actually, Firestore limits to 1MB. Let's check size!
+    if len(req.image_url) > 900000:
+        raise HTTPException(status_code=413, detail="Image is too large. Please select an image under 600KB.")
+        
     new_post = {
         "id": post_id,
-        "user_id": "anonymous",  # Removed JWT requirement for testing
+        "user_id": uid,
         "author": req.author,
         "location": req.location,
         "image_url": req.image_url,
@@ -257,8 +220,45 @@ def create_gallery_post(req: GalleryPostRequest):
         "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat()
     }
     
-    db.collection('gallery_posts').document(post_id).set(new_post)
+    try:
+        db.collection('gallery_posts').document(post_id).set(new_post)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Firestore error: {str(e)}")
+        
     return {"message": "Post created successfully", "post": new_post}
+
+@app.get("/api/user/photos")
+def get_user_photos(user_token=Depends(verify_jwt)):
+    if db is None:
+        raise HTTPException(status_code=500, detail="Database not connected")
+    uid = user_token.get("uid")
+    posts = []
+    # Note: Using stream directly for small sets. Proper indexing may be needed for large sets.
+    docs = db.collection("gallery_posts").where("user_id", "==", uid).stream()
+    for doc in docs:
+        p = doc.to_dict()
+        p["id"] = doc.id
+        posts.append(p)
+    # Sort by created_at descending in python since we might lack a compound index
+    posts.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+    return {"photos": posts}
+
+@app.delete("/api/gallery/{post_id}")
+def delete_gallery_post(post_id: str, user_token=Depends(verify_jwt)):
+    if db is None:
+        raise HTTPException(status_code=500, detail="Database not connected")
+    uid = user_token.get("uid")
+    post_ref = db.collection("gallery_posts").document(post_id)
+    doc = post_ref.get()
+    
+    if not doc.exists:
+        raise HTTPException(status_code=404, detail="Post not found")
+        
+    if doc.to_dict().get("user_id") != uid:
+        raise HTTPException(status_code=403, detail="Forbidden")
+        
+    post_ref.delete()
+    return {"message": "Post deleted successfully"}
 
 @app.post("/api/gallery/{post_id}/like")
 def like_gallery_post(post_id: str):
@@ -376,6 +376,38 @@ def toggle_favorite(req: FavoriteRequest, user_token=Depends(verify_jwt)):
         msg = "Added to favorites"
     user_ref.update({"favorites": favorites})
     return {"message": msg, "favorites": favorites}
+class JournalRequest(BaseModel):
+    title: str
+    itinerary_data: dict
+
+@app.post("/api/user/journal")
+def save_to_journal(req: JournalRequest, user_token=Depends(verify_jwt)):
+    if db is None:
+        raise HTTPException(status_code=500, detail="Database not connected")
+    uid = user_token.get("uid")
+    if not uid:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+    
+    user_ref = db.collection("users").document(uid)
+    doc = user_ref.get()
+    if not doc.exists:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    user_data = doc.to_dict()
+    journal = user_data.get("journal", [])
+    
+    import datetime
+    new_entry = {
+        "title": req.title,
+        "date_saved": datetime.datetime.now().isoformat(),
+        "itinerary_data": req.itinerary_data
+    }
+    
+    journal.append(new_entry)
+    user_ref.update({"journal": journal})
+    return {"message": "Saved to journal successfully!", "journal": journal}
+
+
 @app.get('/api/auth/verify')
 def auth_verify(user_data = Depends(verify_jwt)):
     if not user_data:

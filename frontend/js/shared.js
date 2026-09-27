@@ -135,4 +135,34 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.reload();
         });
     });
+
+    // 4. Smart Sticky Navbar (Hide on scroll down, show on scroll up)
+    let lastScrollTop = 0;
+    const navbar = document.querySelector('nav');
+    if (navbar) {
+        navbar.style.transition = 'top 0.3s ease-in-out';
+        navbar.style.position = 'fixed';
+        navbar.style.width = '100%';
+        navbar.style.zIndex = '9999';
+        
+        // Ensure body has padding so content isn't hidden under fixed navbar initially
+        if (!document.body.classList.contains('index-body') && !document.body.classList.contains('auth-body') && !document.body.classList.contains('home-body')) {
+            document.body.style.paddingTop = navbar.offsetHeight + 'px';
+        }
+
+        // Don't fight with home.js's native scroll logic
+        if (!document.body.classList.contains('home-body')) {
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > lastScrollTop && scrollTop > 80) {
+                    // Scrolling Down
+                    navbar.style.top = '-' + (navbar.offsetHeight + 10) + 'px';
+                } else {
+                    // Scrolling Up
+                    navbar.style.top = '0';
+                }
+                lastScrollTop = scrollTop;
+            });
+        }
+    }
 });

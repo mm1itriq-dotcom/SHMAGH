@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 2. Fetch Destinations
-    fetch('http://localhost:8000/api/destinations')
+    fetch('http://127.0.0.1:8000/api/destinations')
         .then(res => res.json())
         .then(data => {
             if (data.destinations) {
@@ -95,16 +95,56 @@ document.addEventListener("DOMContentLoaded", () => {
             grid.appendChild(card);
         });
         
-        // Setup fav toggle logic
+        // Setup fav toggle logic with Backend Sync
         grid.querySelectorAll('.fav-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const icon = e.currentTarget.querySelector('i');
-                if (icon.classList.contains('ph-heart')) {
-                    icon.classList.replace('ph-heart', 'ph-fill');
-                    e.currentTarget.style.color = '#e74c3c';
+            btn.addEventListener('click', async (e) => {
+                const btnEl = e.currentTarget;
+                const icon = btnEl.querySelector('i');
+                const destName = btnEl.closest('.dest-card').querySelector('h3').innerText;
+                const token = sessionStorage.getItem('shmagh_token');
+                
+                if (!token) {
+                    showToast("Please log in to save favorites", "error");
+                    return;
+                }
+
+                // Toggle UI instantly for responsiveness
+                const isAdding = icon.classList.contains('ph');
+                if (isAdding) {
+                    icon.className = 'ph-fill ph-heart';
+                    btnEl.style.color = 'var(--gold)';
                 } else {
-                    icon.classList.replace('ph-fill', 'ph-heart');
-                    e.currentTarget.style.color = '#ccc';
+                    icon.className = 'ph ph-heart';
+                    btnEl.style.color = '#ccc';
+                }
+
+                // Sync with Backend
+                try {
+                    const res = await fetch('http://127.0.0.1:8000/api/user/favorite', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ destination_name: destName })
+                    });
+                    if (!res.ok) {
+                        throw new Error("Failed to sync favorite");
+                    }
+                    const data = await res.json();
+                    if (data.message === "Added to favorites") {
+                        showToast(destName + " added to Saved!", "success");
+                    }
+                } catch (err) {
+                    // Revert UI on failure
+                    if (isAdding) {
+                        icon.className = 'ph ph-heart';
+                        btnEl.style.color = '#ccc';
+                    } else {
+                        icon.className = 'ph-fill ph-heart';
+                        btnEl.style.color = 'var(--gold)';
+                    }
+                    showToast("Error saving favorite.", "error");
                 }
             });
         });
@@ -183,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mapboxMap.addControl(new mapboxgl.NavigationControl(), 'top-left');
             }
 
-            fetch('http://localhost:8000/api/geocode?q=' + encodeURIComponent(destName + ' Jordan'))
+            fetch('http://127.0.0.1:8000/api/geocode?q=' + encodeURIComponent(destName + ' Jordan'))
                 .then(res => res.json())
                 .then(data => {
                     if (data && data.length > 0) {
@@ -209,20 +249,26 @@ document.addEventListener("DOMContentLoaded", () => {
             const bgMatch = card.style.backgroundImage.match(/url\(['"]?(.*?)['"]?\)/i);
             if(bgMatch && bgMatch[1]) { imgUrl = bgMatch[1]; }
             
-            if (!myJourney.find(d => d.name === destName)) {
+            const existingIdx = myJourney.findIndex(d => d.name === destName);
+            const lang = localStorage.getItem('shmagh_lang');
+
+            if (existingIdx !== -1) {
+                // REMOVE IT
+                myJourney.splice(existingIdx, 1);
+                updateJourneySidebar();
+                
+                btn.innerText = lang === 'ar' ? "+ إضافة" : "+ Add";
+                btn.style.backgroundColor = ""; // Reset to default CSS
+                btn.style.color = ""; // Reset to default CSS
+            } else {
+                // ADD IT
                 myJourney.push({ name: destName, price: destPriceStr, img: imgUrl });
                 updateJourneySidebar();
+                
+                btn.innerText = lang === 'ar' ? "تمت الإضافة ✓" : "Added ✓";
+                btn.style.backgroundColor = "#fff";
+                btn.style.color = "#000";
             }
-            
-            const lang = localStorage.getItem('shmagh_lang');
-            btn.innerText = lang === 'ar' ? "تمت الإضافة ✓" : "Added ✓";
-            btn.style.backgroundColor = "#fff";
-            btn.style.color = "#000";
-            setTimeout(() => {
-                btn.innerText = lang === 'ar' ? "+ إضافة" : "+ Add";
-                btn.style.backgroundColor = "var(--gold)";
-                btn.style.color = "#fff";
-            }, 2000);
         }
         
         // --- REMOVE ITEM LOGIC ---
@@ -508,44 +554,79 @@ setTimeout(() => {
             const destNames = myJourney.map(d => d.name);
 
             try {
-                const response = await fetch('http://localhost:8000/api/generate-journey', {
+                const response = await fetch('http://127.0.0.1:8000/api/generate-journey', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                        destinations: destNames,
-                        days: Math.max(3, destNames.length), // Smart default
-                        budget: "Standard",
-                        travel_style: "Explorer"
+                        starting_location: "Amman",
+                        preferred_destinations: destNames,
+                        trip_duration_days: Math.max(3, destNames.length),
+                        number_of_travelers: 2,
+                        budget: 1500.0,
+                        travel_style: ["Explorer", "Cultural"],
+                        hotel_preference: "Standard"
                     })
                 });
 
                 if (!response.ok) {
                     const err = await response.json();
-                    throw new Error(err.detail || "Failed to generate itinerary");
+                    let errMsg = err.detail;
+                    if (Array.isArray(errMsg)) {
+                        errMsg = errMsg.map(e => e.msg + " (" + e.loc.join('.') + ")").join(', ');
+                    }
+                    throw new Error(errMsg || "Failed to generate itinerary");
                 }
 
                 const data = await response.json();
                 
-                // Render the AI response beautifully
+                                // Render the AI response beautifully
                 let html = `<div style="color: #fff; line-height: 1.6; font-size: 0.9rem;">`;
-                html += `<h3 style="color: var(--gold); margin-bottom: 1rem; font-family: 'Playfair Display', serif; font-size: 1.5rem;">Your ${data.days || destNames.length}-Day Adventure</h3>`;
                 
-                if (data.itinerary && Array.isArray(data.itinerary)) {
-                    data.itinerary.forEach((day, index) => {
+                // Use the nested 'journey' object if it exists
+                const journeyData = data.journey || data;
+                
+                html += `<h3 style="color: var(--gold); margin-bottom: 0.5rem; font-family: 'Playfair Display', serif; font-size: 1.5rem;">Your Optimal Adventure</h3>`;
+                
+                if (journeyData.recommended_trip) {
+                    html += `<p style="color: #ccc; margin-bottom: 1rem;">Optimized Route: <strong>${journeyData.recommended_trip.route.join(' &rarr; ')}</strong></p>`;
+                }
+
+                if (journeyData.itinerary && Array.isArray(journeyData.itinerary)) {
+                    journeyData.itinerary.forEach((day) => {
+                        let locations = Array.isArray(day.locations) ? day.locations.join(', ') : day.locations || 'TBD';
+                        let activities = Array.isArray(day.activities) ? day.activities.join(' • ') : day.activities || 'Sightseeing';
+                        
                         html += `
-                            <div style="margin-bottom: 1.5rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--gold);">
-                                <h4 style="margin: 0 0 0.5rem 0; color: #fff;">Day ${day.day}: ${day.location}</h4>
-                                <p style="margin: 0 0 0.5rem 0; color: #ccc;">${day.description}</p>
-                                <span style="font-size: 0.8rem; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">${day.activity}</span>
+                            <div style="margin-bottom: 1rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--gold);">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #fff;">Day ${day.day}: ${locations}</h4>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.8rem; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem;">🚗 ${day.driving_time || 'N/A'}</span>
+                                    <span style="font-size: 0.8rem; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">💰 ${day.estimated_cost || 'N/A'}</span>
+                                </div>
+                                <p style="margin: 0; color: #ccc; font-size: 0.85rem;">${activities}</p>
                             </div>
                         `;
                     });
-                } else {
-                    html += `<p>${JSON.stringify(data)}</p>`;
                 }
+                
+                if (journeyData.cost_analysis) {
+                    html += `
+                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <h4 style="color: var(--gold); margin-bottom: 0.5rem;">Budget Breakdown</h4>
+                            <ul style="list-style: none; padding: 0; margin: 0; color: #ccc; font-size: 0.85rem;">
+                                <li>Transport: ${journeyData.cost_analysis.transport_cost} JOD</li>
+                                <li>Hotels: ${journeyData.cost_analysis.hotel_cost} JOD</li>
+                                <li>Food: ${journeyData.cost_analysis.food_cost} JOD</li>
+                                <li>Activities: ${journeyData.cost_analysis.activity_cost} JOD</li>
+                                <li><strong>Total Estimated: ${journeyData.cost_analysis.total_cost} JOD</strong></li>
+                            </ul>
+                        </div>
+                    `;
+                }
+                
                 html += `</div>`;
                 
                 aiContent.innerHTML = html;
