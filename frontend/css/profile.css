@@ -247,3 +247,196 @@ body.rtl-active .input-group {
 }
 
 .profile-navbar { box-sizing: border-box; }
+
+
+/* Profile My Photos & Saved Cards CSS */
+
+.photo-item-card {
+
+    position: relative;
+
+    height: 200px;
+
+    border-radius: 12px;
+
+    background-size: cover;
+
+    background-position: center;
+
+    overflow: hidden;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+    transition: transform 0.3s ease;
+
+}
+
+.photo-item-card:hover {
+
+    transform: translateY(-5px);
+
+}
+
+.photo-item-card .remove-photo-btn {
+
+    position: absolute;
+
+    top: 10px;
+
+    right: 10px;
+
+    background: rgba(231, 76, 60, 0.9);
+
+    color: white;
+
+    border: none;
+
+    border-radius: 50%;
+
+    width: 35px;
+
+    height: 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: background 0.3s;
+
+}
+
+.photo-item-card .remove-photo-btn:hover {
+
+    background: #c0392b;
+
+}
+
+.photo-overlay {
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 0;
+
+    right: 0;
+
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+
+    padding: 10px;
+
+    color: white;
+
+    font-weight: bold;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+}
+
+.saved-item-card {
+
+    background: rgba(255, 255, 255, 0.05);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 12px;
+
+    padding: 1.5rem;
+
+    color: #fff;
+
+    transition: transform 0.3s ease, border-color 0.3s ease;
+
+}
+
+.saved-item-card:hover {
+
+    transform: translateY(-5px);
+
+    border-color: var(--gold);
+
+}
+
+.saved-item-card h4 {
+
+    margin: 0;
+
+    font-size: 1.2rem;
+
+    color: var(--gold);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.5rem;
+
+}
+
+/* Grid layout for my photos */
+
+#my-photos {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+    gap: 1.5rem;
+
+    padding: 1rem;
+
+}
+
+#my-photos .empty-state {
+
+    grid-column: 1 / -1;
+
+}
+
+
+/* Profile Journal Cards CSS */
+.journal-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.journal-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold);
+}
+.journal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.8rem;
+    margin-bottom: 1rem;
+}
+.journal-header h4 {
+    margin: 0;
+    color: var(--gold);
+    font-size: 1.3rem;
+}
+.journal-header span {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+.journal-body {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+.journal-list {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}

@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchRates() {
         const base = fromCurrency.value;
         try {
-            const res = await fetch('http://localhost:8000/api/exchange-rates?base=' + base);
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/' + base);
             const data = await res.json();
             rates = data.rates;
             calculate();
@@ -134,10 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fromAmount.addEventListener('input', calculate);
     convertBtn.addEventListener('click', () => {
-        convertBtn.innerText = localStorage.getItem('shmagh_lang') === 'ar' ? 'جاري التحويل...' : 'Converting...';
+        convertBtn.innerText = 'Converting...';
         setTimeout(() => {
             calculate();
-            convertBtn.innerText = localStorage.getItem('shmagh_lang') === 'ar' ? 'تحويل' : 'Convert';
+            convertBtn.innerText = 'Convert';
         }, 300);
     });
 

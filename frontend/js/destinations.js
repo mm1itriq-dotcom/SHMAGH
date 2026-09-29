@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { auth, db, doc, updateDoc, setDoc, arrayUnion, arrayRemove, collection, getDocs } from './firebase-init.js';
+document.addEventListener("DOMContentLoaded", async () => {
     const grid = document.getElementById('dest-grid');
     const searchInput = document.getElementById('dest-search');
     const filterPills = document.querySelectorAll('.filter-pill[data-filter]');
@@ -18,7 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentDirectionFilter = 'All';
     
     const savedJourney = sessionStorage.getItem('shmagh_journey');
-    let myJourney = savedJourney ? JSON.parse(savedJourney) : [];
+    let myJourney = [];
+    try {
+        if (savedJourney) {
+            myJourney = JSON.parse(savedJourney);
+        }
+    } catch (e) {
+        console.error("Error parsing saved journey:", e);
+        sessionStorage.removeItem('shmagh_journey');
+    }
     
     document.querySelector('.your-journey-btn').innerHTML += `<span class="journey-badge" id="journey-badge">0</span>`;
     const journeyBadge = document.getElementById('journey-badge');
@@ -43,20 +52,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 2. Fetch Destinations
-    fetch('http://127.0.0.1:8000/api/destinations')
-        .then(res => res.json())
-        .then(data => {
-            if (data.destinations) {
-                allDestinations = data.destinations;
-                renderGrid();
-            }
-        })
-        .catch(err => console.error("Error fetching destinations:", err));
+    // Fetch from Firebase Firestore
+    try {
+        const destCol = collection(db, 'destinations');
+        const destSnapshot = await getDocs(destCol);
+        if (destSnapshot.empty) {
+            console.log("Firestore empty, fetching from fallback JSON...");
+            const res = await fetch('json/destinations.json');
+            allDestinations = await res.json();
+        } else {
+            allDestinations = destSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+        renderGrid();
+    } catch (err) {
+        console.error("Error fetching destinations from Firebase:", err);
+    }
 
     // 3. Render Function
     function renderGrid() {
         grid.innerHTML = '';
         const query = searchInput.value.toLowerCase();
+        const lang = (typeof SHMAGHi18n !== 'undefined') ? SHMAGHi18n.getLanguage() : 'en';
         
         const filtered = allDestinations.filter(dest => {
             const destName = dest.name || dest.title || '';
@@ -76,19 +92,45 @@ document.addEventListener("DOMContentLoaded", () => {
             const destPrice = dest.price || dest.price_from || '';
             const destImg = dest.img || dest.image_url || 'assets/explore_historical.jpg';
             
+            // Translate if Arabic
+            const displayName = (lang === 'ar' && en2ar[destName]) ? en2ar[destName] : destName;
+            const displayDesc = (lang === 'ar' && en2ar[destDesc]) ? en2ar[destDesc] : destDesc;
+            const viewMapText = (lang === 'ar') ? 'عرض الخريطة' : 'View Map';
+            const addText = (lang === 'ar') ? '+ إضافة' : '+ Add';
+            
+            // Translate price
+            let displayPrice = destPrice;
+            if (lang === 'ar' && destPrice) {
+                const priceMatch = destPrice.match(/From (\d+) JD/);
+                if (priceMatch) {
+                    displayPrice = `من ${priceMatch[1]} دينار`;
+                } else if (destPrice === 'Variable') {
+                    displayPrice = 'متغير';
+                } else {
+                    const tildaMatch = destPrice.match(/~ (\d+) JD/);
+                    if (tildaMatch) displayPrice = `~ ${tildaMatch[1]} دينار`;
+                }
+            }
+            
+            // Check if already in journey
+            const isAdded = myJourney.some(j => j.name === destName);
+            const btnClass = isAdded ? 'add-btn added' : 'add-btn';
+            const btnText = isAdded ? ((lang === 'ar') ? 'تمت الإضافة ✓' : 'Added ✓') : addText;
+            
             const card = document.createElement('div');
             card.className = 'dest-card';
             card.style.backgroundImage = `url("${destImg}")`;
+            card.setAttribute('data-dest-name', destName); // store original English name
             
             card.innerHTML = `
                 <button class="fav-btn"><i class="ph ph-heart"></i></button>
                 <div class="dest-card-bottom">
-                    <h3>${destName}</h3>
-                    <p>${destDesc}</p>
+                    <h3>${displayName}</h3>
+                    <p>${displayDesc}</p>
                     <div class="dest-card-footer">
-                        <span class="dest-price">${destPrice}</span>
-                        <a href="#" class="dest-map-link"><i class="ph ph-map-pin"></i> View Map</a>
-                        <button class="add-btn">+ Add</button>
+                        <span class="dest-price">${displayPrice}</span>
+                        <a href="#" class="dest-map-link"><i class="ph ph-map-pin"></i> ${viewMapText}</a>
+                        <button class="${btnClass}">${btnText}</button>
                     </div>
                 </div>
             `;
@@ -120,17 +162,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Sync with Backend
                 try {
-                    const res = await fetch('http://127.0.0.1:8000/api/user/favorite', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ destination_name: destName })
-                    });
-                    if (!res.ok) {
-                        throw new Error("Failed to sync favorite");
+                    
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("Not logged in");
+                    const userRef = doc(db, "users", user.uid);
+                    if (isAdding) {
+                        await setDoc(userRef, { favorites: arrayUnion(destName) }, { merge: true });
+                    } else {
+                        await setDoc(userRef, { favorites: arrayRemove(destName) }, { merge: true });
                     }
+
                     const data = await res.json();
                     if (data.message === "Added to favorites") {
                         showToast(destName + " added to Saved!", "success");
@@ -223,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mapboxMap.addControl(new mapboxgl.NavigationControl(), 'top-left');
             }
 
-            fetch('http://127.0.0.1:8000/api/geocode?q=' + encodeURIComponent(destName + ' Jordan'))
+            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(destName + ' Jordan'))
                 .then(res => res.json())
                 .then(data => {
                     if (data && data.length > 0) {
@@ -250,14 +291,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if(bgMatch && bgMatch[1]) { imgUrl = bgMatch[1]; }
             
             const existingIdx = myJourney.findIndex(d => d.name === destName);
-            const lang = localStorage.getItem('shmagh_lang');
+            
 
             if (existingIdx !== -1) {
                 // REMOVE IT
                 myJourney.splice(existingIdx, 1);
                 updateJourneySidebar();
                 
-                btn.innerText = lang === 'ar' ? "+ إضافة" : "+ Add";
+                btn.innerText = "+ Add";
                 btn.style.backgroundColor = ""; // Reset to default CSS
                 btn.style.color = ""; // Reset to default CSS
             } else {
@@ -265,7 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 myJourney.push({ name: destName, price: destPriceStr, img: imgUrl });
                 updateJourneySidebar();
                 
-                btn.innerText = lang === 'ar' ? "تمت الإضافة ✓" : "Added ✓";
+                btn.innerText = "Added ✓";
                 btn.style.backgroundColor = "#fff";
                 btn.style.color = "#000";
             }
@@ -282,6 +323,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateJourneySidebar() {
         sessionStorage.setItem('shmagh_journey', JSON.stringify(myJourney));
         journeyBadge.innerText = myJourney.length;
+        const lang = (typeof SHMAGHi18n !== 'undefined') ? SHMAGHi18n.getLanguage() : 'en';
+        
         if (myJourney.length > 0) {
             journeyBadge.classList.add('visible');
         } else {
@@ -289,7 +332,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         if (myJourney.length === 0) {
-            journeyItemsContainer.innerHTML = '<p class="empty-state">Your journey is empty.<br>Add destinations to start planning!</p>';
+            const emptyText = (lang === 'ar') ? 'رحلتك فارغة.<br>أضف وجهات لبدء التخطيط!' : 'Your journey is empty.<br>Add destinations to start planning!';
+            journeyItemsContainer.innerHTML = '<p class="empty-state">' + emptyText + '</p>';
             journeyTotal.innerText = '0 JD';
             return;
         }
@@ -301,11 +345,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const match = item.price.match(/\d+/);
             if (match) { totalCost += parseInt(match[0]); }
             
+            const displayName = (lang === 'ar' && en2ar[item.name]) ? en2ar[item.name] : item.name;
+            
             journeyItemsContainer.innerHTML += `
                 <div class="journey-item">
                     <img src="${item.img}" alt="${item.name}">
                     <div class="journey-item-info">
-                        <h4>${item.name}</h4>
+                        <h4>${displayName}</h4>
                         <p>${item.price}</p>
                     </div>
                     <button class="remove-item" data-name="${item.name}"><i class="ph ph-trash"></i></button>
@@ -313,8 +359,15 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
         });
         
-        journeyTotal.innerText = totalCost > 0 ? `~ ${totalCost} JD` : 'Variable';
+        const costText = totalCost > 0 ? `~ ${totalCost} JD` : ((lang === 'ar') ? 'متغير' : 'Variable');
+        journeyTotal.innerText = costText;
     }
+
+    // Listen for language changes and re-render dynamic content
+    document.addEventListener('langChanged', () => {
+        renderGrid();
+        updateJourneySidebar();
+    });
 
 });
 
@@ -453,74 +506,31 @@ function walkTextNodes(node, dictionary) {
             // Dynamic match for "From XX JD" OR "من XX دينار"
             else if (text.match(/^(?:From|من) \d+ (?:JD|دينار)$/i)) {
                 const amount = text.match(/\d+/)[0];
-                node.nodeValue = localStorage.getItem('shmagh_lang') === 'ar' ? `من ${amount} دينار` : `From ${amount} JD`;
+                node.nodeValue = `From ${amount} JD`;
             }
             // Dynamic match for "~ XX JD" OR "~ XX دينار"
             else if (text.match(/^~ \d+ (?:JD|دينار)$/i)) {
                 const amount = text.match(/\d+/)[0];
-                node.nodeValue = localStorage.getItem('shmagh_lang') === 'ar' ? `~ ${amount} دينار` : `~ ${amount} JD`;
+                node.nodeValue = `~ ${amount} JD`;
             }
             // Dynamic match for "Variable" / "متغير"
             else if (text === "Variable" || text === "متغير") {
-                node.nodeValue = localStorage.getItem('shmagh_lang') === 'ar' ? "متغير" : "Variable";
+                node.nodeValue = 'Variable';
             }
             // Dynamic match for Empty state
             else if (text === "Your journey is empty." || text === "رحلتك فارغة.") {
-                node.nodeValue = localStorage.getItem('shmagh_lang') === 'ar' ? "رحلتك فارغة." : "Your journey is empty.";
+                node.nodeValue = 'Your journey is empty.';
             }
             else if (text === "Add destinations to start planning!" || text === "أضف وجهات لبدء التخطيط!") {
-                node.nodeValue = localStorage.getItem('shmagh_lang') === 'ar' ? "أضف وجهات لبدء التخطيط!" : "Add destinations to start planning!";
+                node.nodeValue = 'Add destinations to start planning!';
             }
         }
     } else if (node.nodeType === 1) {
-        // Translate placeholders
-        if (node.placeholder) {
-            let pText = node.placeholder.trim();
-            if (dictionary[pText]) node.placeholder = dictionary[pText];
-        }
         for (let i = 0; i < node.childNodes.length; i++) {
             walkTextNodes(node.childNodes[i], dictionary);
         }
     }
 }
-
-function applyTranslation(lang) {
-    const dict = lang === 'ar' ? en2ar : ar2en;
-    walkTextNodes(document.body, dict);
-    
-    // Switch direction
-    if (lang === 'ar') {
-        document.body.style.direction = 'rtl';
-        document.body.classList.add('rtl-active');
-        document.querySelector('.en-label').classList.remove('active-lang');
-        document.querySelector('.ar-label').classList.add('active-lang');
-        document.getElementById('lang-toggle').checked = true;
-    } else {
-        document.body.style.direction = 'ltr';
-        document.body.classList.remove('rtl-active');
-        document.querySelector('.ar-label').classList.remove('active-lang');
-        document.querySelector('.en-label').classList.add('active-lang');
-        document.getElementById('lang-toggle').checked = false;
-    }
-}
-
-// Bind to toggle
-const langToggle = document.getElementById('lang-toggle');
-if (langToggle) {
-    langToggle.addEventListener('change', (e) => {
-        const lang = e.target.checked ? 'ar' : 'en';
-        localStorage.setItem('shmagh_lang', lang);
-        applyTranslation(lang);
-    });
-}
-
-// Load saved language on start
-setTimeout(() => {
-    const savedLang = localStorage.getItem('shmagh_lang');
-    if (savedLang === 'ar') {
-        applyTranslation('ar');
-    }
-}, 300);
 
     // Real Full-Stack AI Itinerary Generation
     const generateBtn = document.getElementById('real-generate-btn');

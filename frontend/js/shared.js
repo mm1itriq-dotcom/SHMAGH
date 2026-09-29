@@ -1,25 +1,25 @@
+import { auth, onAuthStateChanged, signOut } from './firebase-init.js';
 // shared.js
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Auth Check
-    const token = sessionStorage.getItem('shmagh_token');
-    const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
-    
-    if (token && !isIndex) {
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/auth/verify', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            if (!response.ok) {
-                sessionStorage.clear();
-                window.location.href = 'index.html';
+// 1. Auth Check (Firebase)
+    const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.includes('index.html');
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            sessionStorage.setItem('shmagh_token', user.uid);
+            // If they are on index.html (login page) and already logged in, send them to home
+            if (isIndex) {
+                window.location.replace('home.html');
             }
-        } catch (e) {
-            console.error("Auth verify failed", e);
+        } else {
+            sessionStorage.removeItem('shmagh_token');
+            if (!isIndex) {
+                window.location.replace('index.html');
+            }
         }
-    } else if (!token && !isIndex) {
-        window.location.href = 'index.html';
-    }
+    });
+
+document.addEventListener('DOMContentLoaded', async () => {
+
 
     // 2. Inactive Links Fix
     document.querySelectorAll('a[href="#"]').forEach(link => {
@@ -56,85 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // 3. Global Translation Logic
-    const dictionaryEn2Ar = {
-        "Home": "الرئيسية",
-        "Explore": "استكشف",
-        "Stories": "قصص",
-        "Culture": "ثقافة",
-        "Weather": "الطقس",
-        "Toolkit": "الأدوات",
-        "Gallary": "المعرض",
-        "Gallery": "المعرض",
-        "Converter": "محول العملات",
-        "Favorite": "المفضلة",
-        "LOG OUT": "تسجيل الخروج",
-        "Privacy Policy": "سياسة الخصوصية",
-        "Terms of Service": "شروط الخدمة",
-        "Contact Us": "اتصل بنا",
-        "FAQ & Support": "الدعم والأسئلة الشائعة",
-        "Discover Destinations": "اكتشف الوجهات",
-        "Your Journey": "رحلتك",
-        "Share Your Journey": "شارك رحلتك",
-        "Community Journal": "يوميات المجتمع",
-        "Upload Photo": "رفع صورة",
-        "My Photos": "صوري",
-        "All Photos": "كل الصور",
-        "Historical Sites": "مواقع تاريخية",
-        "Nature & Desert": "الطبيعة والصحراء",
-        "Bedouin Culture": "الثقافة البدوية",
-        "Cities & Regions": "مدن ومناطق",
-        "Traveler's Toolkit": "أدوات المسافر"
-    };
-    
-    const dictionaryAr2En = {};
-    for (let en in dictionaryEn2Ar) { dictionaryAr2En[dictionaryEn2Ar[en]] = en; }
-
-    function walkTextNodes(node, dict) {
-        if (node.nodeType === 3) {
-            let text = node.nodeValue.replace(/\s+/g, ' ').trim();
-            if (text && dict[text]) {
-                node.nodeValue = node.nodeValue.replace(text, dict[text]);
-            }
-        } else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
-            if (node.placeholder && dict[node.placeholder.trim()]) {
-                node.placeholder = dict[node.placeholder.trim()];
-            }
-            for (let i = 0; i < node.childNodes.length; i++) {
-                walkTextNodes(node.childNodes[i], dict);
-            }
-        }
-    }
-
-    function applyGlobalTranslation(lang) {
-        const dict = lang === 'ar' ? dictionaryEn2Ar : dictionaryAr2En;
-        walkTextNodes(document.body, dict);
-        
-        if (lang === 'ar') {
-            document.body.style.direction = 'rtl';
-            document.body.classList.add('rtl-active');
-            document.querySelectorAll('.en-label').forEach(el => el.classList.remove('active-lang'));
-            document.querySelectorAll('.ar-label').forEach(el => el.classList.add('active-lang'));
-            document.querySelectorAll('#lang-toggle').forEach(t => t.checked = true);
-        } else {
-            document.body.style.direction = 'ltr';
-            document.body.classList.remove('rtl-active');
-            document.querySelectorAll('.en-label').forEach(el => el.classList.add('active-lang'));
-            document.querySelectorAll('.ar-label').forEach(el => el.classList.remove('active-lang'));
-            document.querySelectorAll('#lang-toggle').forEach(t => t.checked = false);
-        }
-    }
-
-    const savedLang = localStorage.getItem('shmagh_lang') || 'en';
-    applyGlobalTranslation(savedLang);
-    
-    document.querySelectorAll('#lang-toggle').forEach(toggle => {
-        toggle.addEventListener('change', (e) => {
-            const lang = e.target.checked ? 'ar' : 'en';
-            localStorage.setItem('shmagh_lang', lang);
-            window.location.reload();
-        });
-    });
+    // 3. Translation is now handled by js/i18n.js (data-i18n system)
 
     // 4. Smart Sticky Navbar (Hide on scroll down, show on scroll up)
     let lastScrollTop = 0;
@@ -166,3 +88,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 });
+
+
+// Expose logout to global scope for onclick handlers
+window.logout = function() {
+    signOut(auth).then(() => {
+        sessionStorage.removeItem('shmagh_token');
+        window.location.href = 'index.html';
+    }).catch(e => {
+        console.error("Logout error", e);
+    });
+};

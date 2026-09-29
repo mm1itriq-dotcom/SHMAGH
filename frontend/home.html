@@ -17,14 +17,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <!-- Global Styles & Home Specific Styles -->
-    <link rel="stylesheet" href="css/styles.css?v=1790460280">
+    <link rel="stylesheet" href="css/styles.css?v=1790695780">
     <link rel="stylesheet" href="css/home.css">
 
-    <script>
-        if (!sessionStorage.getItem('shmagh_token')) {
-            window.location.href = 'index.html';
-        }
-    </script>
+    
 </head>
 <body class="home-body">
 
@@ -177,7 +173,7 @@
                 <p>Petra was shaped by the Nabataeans, who carved temples, tombs, and pathways directly into rose-red sandstone. Entering through the Siq reveals a city where craft, trade, and memory remain embedded in the land.</p>
                 <p>Beyond its monuments, Petra carries the stories of people who crossed the desert and made this place a meeting point of cultures. Its enduring silence is part of its power.</p>
                 
-                <button id="read-story-btn" class="gold-btn-solid rounded-btn">Read Full Story &rarr;</button>
+                <button id="read-story-btn" class="gold-btn-solid rounded-btn" onclick="navigateToStory()">Read Full Story &rarr;</button>
             </div>
         </div>
         
@@ -277,7 +273,7 @@
                 <h3>Talabat</h3>
                 <span class="app-tag">FOOD DELIVERY</span>
                 <p class="app-desc">The most popular food delivery platform in Jordan. Order authentic local cuisine directly to your location.</p>
-                <a href="https://www.talabat.com/jordan" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+                <a href="https://apps.apple.com/us/app/talabat-food-grocery-more/id451001072" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
             </div>
 
             <!-- App 2 -->
@@ -286,7 +282,7 @@
                 <h3>Petra Ride</h3>
                 <span class="app-tag">RIDE HAILING</span>
                 <p class="app-desc">A trusted local ride-hailing service. Safe, reliable, and the easiest way to navigate inside the city.</p>
-                <a href="https://www.petraride.com/" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+                <a href="https://apps.apple.com/us/app/petra-ride/id1463809354" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
             </div>
 
             <!-- App 3 -->
@@ -295,7 +291,7 @@
                 <h3>JETT</h3>
                 <span class="app-tag">INTERCITY TRAVEL</span>
                 <p class="app-desc">Premium intercity bus travel. The most comfortable and affordable way to travel between Amman, Petra, and Aqaba.</p>
-                <a href="https://www.jett.com.jo/" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+                <a href="https://apps.apple.com/us/app/jett-جت/id1438081338" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
             </div>
 
             <!-- App 4 -->
@@ -304,7 +300,7 @@
                 <h3>Amman Vision Bus</h3>
                 <span class="app-tag">PUBLIC TRANSIT</span>
                 <p class="app-desc">Navigate the capital like a local. Track routes and schedules for Amman's modern public transit network.</p>
-                <a href="https://ammanbus.jo/" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
+                <a href="https://apps.apple.com/us/app/vision-city-bus/id1478721196" target="_blank" class="app-link">Download App <i class="ph ph-arrow-up-right"></i></a>
             </div>
 
             <!-- App 5 -->
@@ -430,100 +426,14 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="js/home.js?v=1790535368"></script>
+    <script src="js/home.js?v=1790695780"></script>
 
     
 
-    <!-- FULL STORY MODAL -->
-    <div id="full-story-modal" class="story-modal">
-        <button class="close-story" id="close-story-btn"><i class="ph ph-x"></i></button>
-        
-        <div class="story-modal-hero" style="background-image: url('assets/petra_bg.jpg');">
-            <div class="hero-overlay"></div>
-            <h1 class="story-modal-title">Petra - The Rose City</h1>
-        </div>
-        
-        <div class="story-modal-content">
-            <div class="story-video-thumb">
-                <!-- Using a secondary petra image as thumbnail -->
-                <img loading="lazy" src="assets/explore_historical.jpg" alt="Video Thumbnail">
-                <button class="play-btn"><i class="ph-fill ph-play"></i></button>
-            </div>
-            <div class="story-text-content">
-                <h2>The Nabataeans: Masters of Rock and Water in the Heart of the Desert</h2>
-                <p>Petra flourished as the capital of the Nabataeans since the 4th century BC, at the crossroads of caravan routes between the Arabian Peninsula and the Mediterranean. From the heart of the rose mountains, they built a city combining trade, rituals, and art in a scene unlike any other.</p>
-                <p>The Nabataeans mastered water engineering in a rain-scarce environment; they carved channels, reservoirs, and dams, turning flash floods into a life resource. Their majestic facades blended Eastern traditions with Hellenistic and Roman influences.</p>
-                <p>Their legacy remains carved in stone and in the memory of the place. Today, Petra stands as a witness to a great civilization.</p>
-            </div>
-        </div>
-    </div>
+    
 
-
-    <!-- FULL STORY MODAL (UMM QAIS) -->
-    <div id="umm-qais-modal" class="story-modal">
-        <button class="close-story" id="close-umm-qais-btn"><i class="ph ph-x"></i></button>
-        
-        <div class="story-modal-hero" style="background-image: url('assets/umm_qais_hero.jpg');">
-            <div class="hero-overlay"></div>
-            <h1 class="story-modal-title">Umm Qais: Where History Meets Nature</h1>
-        </div>
-        
-        <div class="story-modal-content">
-            <div class="story-text-content">
-                <span style="color: var(--gold); font-size: 0.8rem; letter-spacing: 0.15rem; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 1rem;">Tale of the Place</span>
-                <p>Umm Qais is distinguished by its charming view of the Sea of Galilee and the Golan Heights. Where the remains of the ancient city embrace green plains extending to the horizon. Known in the Greek era as "Gadara", it was one of the ten Decapolis cities and a thriving center for thought, poetry, and trade.</p>
-                <p>Its paved streets and black basalt columns reveal successive layers of Greek, Roman, and Byzantine civilizations. The Western Theater, carved into volcanic stone, stands as a witness to a rich cultural life that gathered the city's people and its visitors many centuries ago.</p>
-                <p>In Umm Qais, history is inseparable from nature; between Ottoman houses, baths, and temples, scenes open up to valleys and olive orchards, and at sunset, golden light covers the ancient stones, making the city seem like a living memory telling the story of the place and the human.</p>
-            </div>
-            <div class="story-video-thumb">
-                <img loading="lazy" src="assets/umm_qais_video.jpg" alt="Umm Qais Video">
-                <button class="play-btn"><i class="ph-fill ph-play"></i></button>
-                <p style="text-align: center; color: #aaa; font-size: 0.85rem; margin-top: 1rem;">Watch Umm Qais Documentary</p>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- FULL STORY MODAL (ROMAN THEATER) -->
-    <div id="roman-modal" class="story-modal">
-        <button class="close-story" id="close-roman-btn"><i class="ph ph-x"></i></button>
-        
-        <div class="story-modal-hero" style="background-image: url('assets/roman_theater_hero.jpg');">
-            <div class="hero-overlay"></div>
-            <div style="position: relative; z-index: 2; text-align: center;">
-                <span style="color: var(--gold); font-size: 0.8rem; letter-spacing: 0.15rem; display: block; margin-bottom: 0.5rem; font-weight: 500;">Amman Antiquities - Tale of a Place</span>
-                <h1 class="story-modal-title" style="font-size: 4rem;">The Roman Theater: Echo of History</h1>
-            </div>
-        </div>
-        
-        <div class="story-modal-content">
-            <div class="story-text-content">
-                <span style="color: var(--gold); font-size: 0.8rem; letter-spacing: 0.15rem; font-weight: 600; display: block; margin-bottom: 1rem;">Memory of the City</span>
-                <p>The Roman Theater is considered one of the most important historical landmarks in the heart of the capital Amman, and a stone witness to the city's prosperity in the Roman era. Built in the second century AD, when Amman was known as Philadelphia, to welcome thousands of spectators in a majestic architectural space embraced by Mount Al-Joufeh.</p>
-                <p>Its seating was carved into the rock with a precise curve that gives the place exceptional acoustic properties; sounds reached the upper rows with amazing clarity. At its facade stand the remains of columns and corridors as a visual rhythm telling the brilliance of the builders, while the colors of the stone change with daylight from honey to bronze.</p>
-                <p>Today, the theater remains a living space for culture and memory, where concerts and festivals sit side by side with the footsteps of visitors, in a rare meeting between contemporary Amman and its ancient past; a place not only to be seen, but to listen to the echo of a history spanning centuries.</p>
-            </div>
-            
-            <div class="roman-interactive-panel">
-                <div class="phase-tabs">
-                    <button class="phase-tab active">Phase 1</button>
-                    <button class="phase-tab">Phase 2</button>
-                    <button class="phase-tab">Phase 3</button>
-                </div>
-                
-                <div class="roman-image-container">
-                    <img loading="lazy" src="assets/gladiators.jpg" alt="Gladiators Fighting">
-                    <div class="roman-image-caption">
-                        <strong>Reenactment Scene - Philadelphia Arena</strong>
-                        <span>Second Century AD</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/converter.js?v=3"></script>
-    <script src="js/toast.js?v=3"></script>
-    <script src="js/shared.js?v=1790535272"></script>
+    <script src="js/converter.js?v=1790695780"></script>
+    <script src="js/toast.js?v=1790695780"></script>
+    <script type="module" src="js/shared.js?v=1790695780"></script>
 </body>
 </html>

@@ -13,12 +13,9 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/finalize.css">
+    <link rel="stylesheet" href="css/rtl.css">
 
-    <script>
-        if (!sessionStorage.getItem('shmagh_token')) {
-            window.location.href = 'index.html';
-        }
-    </script>
+    
 </head>
 <body class="finalize-body">
 
@@ -29,25 +26,18 @@
         </div>
         
         <div class="nav-center">
-            <a href="home.html">Home</a>
-            <a href="destinations.html">Explore</a>
-            <a href="home.html#stories">Stories</a>
-            <a href="home.html#culture">Culture</a>
-            <a href="home.html#climate">Weather</a>
-            <a href="home.html#toolkit">Toolkit</a>
-            <a href="gallery.html">Gallery</a>
+            <a href="home.html" data-i18n="navigation.home">Home</a>
+            <a href="destinations.html" data-i18n="navigation.explore">Explore</a>
+            <a href="home.html#stories" data-i18n="navigation.stories">Stories</a>
+            <a href="home.html#culture" data-i18n="navigation.culture">Culture</a>
+            <a href="home.html#climate" data-i18n="navigation.weather">Weather</a>
+            <a href="home.html#toolkit" data-i18n="navigation.toolkit">Toolkit</a>
+            <a href="gallery.html" data-i18n="navigation.gallery">Gallery</a>
+            
         </div>
         
         <div class="nav-right">
-            <div class="lang-switch-container">
-                <span class="lang-label en-label active-lang">EN</span>
-                <label class="switch">
-                    <input type="checkbox" id="lang-toggle">
-                    <span class="slider round"></span>
-                </label>
-                <span class="lang-label ar-label">عربي</span>
-            </div>
-            <a href="profile.html" class="profile-btn" aria-label="Profile">
+            <a href="profile.html" class="profile-btn" aria-label="Profile" data-i18n-aria="navigation.profile">
                 <i class="ph ph-user"></i>
             </a>
         </div>
@@ -56,8 +46,8 @@
     <!-- MAIN CONTENT -->
     <main class="finalize-container">
         <div class="finalize-header text-center">
-            <h1>Finalize Your Journey</h1>
-            <p class="subtitle">Selected Destinations</p>
+            <h1 data-i18n="finalize.header.title">Finalize Your Journey</h1>
+            <p class="subtitle" data-i18n="finalize.header.subtitle">Selected Destinations</p>
         </div>
 
         <!-- SELECTED DESTINATIONS ROW -->
@@ -68,22 +58,22 @@
         <!-- INPUT CONTROLS ROW -->
         <div class="journey-controls">
             <div class="control-group">
-                <label>Check-in</label>
-                <input type="text" id="checkin-date" placeholder="Select Date" class="flatpickr-input">
+                <label data-i18n="finalize.controls.checkin_label">Check-in</label>
+                <input type="text" id="checkin-date" placeholder="Select Date" class="flatpickr-input" data-i18n-placeholder="finalize.controls.select_date_placeholder">
             </div>
             
             <div class="control-group">
-                <label>Check-out</label>
-                <input type="text" id="checkout-date" placeholder="Select Date" class="flatpickr-input">
+                <label data-i18n="finalize.controls.checkout_label">Check-out</label>
+                <input type="text" id="checkout-date" placeholder="Select Date" class="flatpickr-input" data-i18n-placeholder="finalize.controls.select_date_placeholder">
             </div>
             
             <div class="control-group guest-control-container">
-                <label>Guests</label>
-                <input type="text" id="guests-input" placeholder="2 Adults" readonly>
+                <label data-i18n="finalize.controls.guests_label">Guests</label>
+                <input type="text" id="guests-input" placeholder="2 Adults" readonly data-i18n-placeholder="finalize.controls.guests_placeholder">
                 <!-- Popover -->
                 <div class="guest-popover" id="guest-popover">
                     <div class="guest-row">
-                        <span>Adults</span>
+                        <span data-i18n="finalize.guests.adults">Adults</span>
                         <div class="counter">
                             <button type="button" id="adults-minus"><i class="ph ph-minus"></i></button>
                             <span id="adults-count">2</span>
@@ -91,7 +81,7 @@
                         </div>
                     </div>
                     <div class="guest-row">
-                        <span>Children</span>
+                        <span data-i18n="finalize.guests.children">Children</span>
                         <div class="counter">
                             <button type="button" id="children-minus"><i class="ph ph-minus"></i></button>
                             <span id="children-count">0</span>
@@ -99,7 +89,7 @@
                         </div>
                     </div>
                     <div class="guest-row">
-                        <span>Rooms</span>
+                        <span data-i18n="finalize.guests.rooms">Rooms</span>
                         <div class="counter">
                             <button type="button" id="rooms-minus"><i class="ph ph-minus"></i></button>
                             <span id="rooms-count">1</span>
@@ -110,15 +100,15 @@
             </div>
 
             <div class="control-group">
-                <label>Budget (Optional)</label>
-                <input type="number" id="budget-input" placeholder="e.g. 1500 (JOD)" style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; font-family: var(--font-primary); font-size: 1rem; outline: none;">
+                <label data-i18n="finalize.controls.budget_label">Budget (Optional)</label>
+                <input type="number" id="budget-input" placeholder="e.g. 1500 (JOD)" style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; font-family: var(--font-primary); font-size: 1rem; outline: none;" data-i18n-placeholder="finalize.controls.budget_placeholder">
             </div>
         </div>
 
         <!-- SEARCH HOTELS -->
         <div class="hotel-search-wrapper">
             <i class="ph ph-magnifying-glass"></i>
-            <input type="text" id="hotel-search-input" placeholder="Search luxury hotels...">
+            <input type="text" id="hotel-search-input" placeholder="Search luxury hotels..." data-i18n-placeholder="finalize.hotels.search_placeholder">
         </div>
 
         <!-- HOTEL GRID -->
@@ -127,8 +117,28 @@
         </div>
 
         <!-- CONFIRM BUTTON -->
+        
+        <!-- JOURNEY SUMMARY -->
+        <div id="journey-summary-container" class="journey-summary" style="background: rgba(0,0,0,0.4); border: 1px solid var(--gold); border-radius: 8px; padding: 1.5rem; margin-top: 2rem; display: none;">
+            <h3 style="color: var(--gold); margin-top: 0; margin-bottom: 1rem;"><i class="ph-fill ph-clipboard-text"></i> Your Journey Summary</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; color: #fff; font-size: 0.95rem;">
+                <div>
+                    <strong style="color: #ccc;">Dates:</strong> <span id="summary-dates">-</span><br><br>
+                    <strong style="color: #ccc;">Travelers:</strong> <span id="summary-travelers">-</span><br><br>
+                    <strong style="color: #ccc;">Budget:</strong> <span id="summary-budget">-</span><br><br>
+                    <strong style="color: #ccc;">Hotel:</strong> <span id="summary-hotel">-</span><br><br>
+                    <strong style="color: #ccc;">Est. Hotel Cost:</strong> <span id="summary-hotel-cost">-</span>
+                </div>
+                <div>
+                    <strong style="color: #ccc;">Destinations:</strong>
+                    <ul id="summary-destinations" style="list-style: none; padding-left: 0; margin-top: 0.5rem; line-height: 1.6;">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <div class="confirm-wrapper">
-            <button class="gold-btn-solid confirm-btn" id="confirm-journey-btn">Confirm</button>
+            <button class="gold-btn-solid confirm-btn" style="padding: 0.8rem 2rem; font-size: 1rem; border-radius: 8px; max-width: 300px; width: 100%;" id="confirm-journey-btn" data-i18n="finalize.actions.generate_btn">Generate My Journey</button>
         </div>
     </main>
 
@@ -136,7 +146,7 @@
     <div id="ticket-overlay" class="ticket-overlay"></div>
     <div id="ticket-panel" class="ticket-panel">
         <div class="ticket-header">
-            <h2>Your Journey Ticket <i class="ph-fill ph-ticket"></i></h2>
+            <h2 data-i18n="finalize.ticket.title">Your Journey Ticket <i class="ph-fill ph-ticket"></i></h2>
             <button id="close-ticket-btn" class="close-btn"><i class="ph ph-x"></i></button>
         </div>
         
@@ -153,28 +163,65 @@
             <!-- Chat Interface -->
             <div class="ticket-chat-area" id="ticket-chat-area">
                 <div class="chat-message ai-message">
-                    <strong>AI Travel Concierge</strong>
-                    <p>Ready to generate your custom itinerary? Click the button below, or tell me any specific requirements first!</p>
+                    <strong data-i18n="finalize.chat.sender_title">AI Travel Concierge</strong>
+                    <p data-i18n="finalize.chat.welcome_message">Ready to generate your custom itinerary? Click the button below, or tell me any specific requirements first!</p>
                 </div>
             </div>
 
             <!-- User Feedback Input -->
             <div class="ticket-input-area">
-                <input type="text" id="chat-feedback-input" placeholder="E.g., I want a relaxed pace, focus on history...">
+                <input type="text" id="chat-feedback-input" placeholder="E.g., I want a relaxed pace, focus on history..." data-i18n-placeholder="finalize.chat.feedback_placeholder">
             </div>
         </div>
         
-        <div class="ticket-footer">
-            <button id="ticket-generate-btn" class="gold-btn-solid">
+        
+        <div class="ticket-footer" style="flex-direction: column; gap: 0.5rem; align-items: stretch;">
+            <button id="ticket-generate-btn" class="gold-btn-solid" style="display:none;">
                 <i class="ph-fill ph-magic-wand"></i> Generate Journey
             </button>
+            
+            <div id="regeneration-controls" style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
+                <button id="regen-change-hotel" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-bed"></i> Change Hotel</button>
+                <button id="regen-change-budget" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-wallet"></i> Change Budget</button>
+                <button id="regen-add-dest" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-plus"></i> Add Dest</button>
+                <button id="regen-remove-dest" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-minus"></i> Remove Dest</button>
+                <button id="regen-re-generate" style="background: var(--gold); border: none; color: #000; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem;"><i class="ph-fill ph-magic-wand"></i> Regenerate Itinerary</button>
+            </div>
         </div>
+
+    </div>
+
+    
+    <!-- BUDGET WARNING MODAL -->
+    <div id="budget-warning-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: #1a1a1a; padding: 2rem; border-radius: 8px; border: 1px solid red; max-width: 400px; text-align: center;">
+            <h3 style="color: red; margin-top: 0;"><i class="ph-fill ph-warning-circle" style="font-size: 2rem;"></i><br>Budget Exceeded</h3>
+            <p id="budget-warning-text" style="color: #ccc; margin-bottom: 1.5rem;"></p>
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <button id="btn-continue-anyway" class="gold-btn-solid" style="background: #333; color: #fff; border: 1px solid #555;">Continue Anyway</button>
+                <button id="btn-change-hotel" class="gold-btn-solid" style="background: var(--gold); color: #000;">Change Hotel</button>
+                <button id="btn-adjust-budget" class="gold-btn-solid" style="background: #27ae60; color: #fff;">Adjust Budget</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="generation-loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 10001; justify-content: center; align-items: center; flex-direction: column;">
+        <h2 style="color: var(--gold); margin-bottom: 2rem;"><i class="ph ph-spinner ph-spin"></i> Creating your personalized journey...</h2>
+        <ul id="loading-steps" style="list-style: none; padding: 0; color: #888; font-size: 1.2rem; line-height: 2;">
+            <li id="step-1"><i class="ph ph-circle"></i> Understanding preferences</li>
+            <li id="step-2"><i class="ph ph-circle"></i> Checking routes</li>
+            <li id="step-3"><i class="ph ph-circle"></i> Calculating travel time</li>
+            <li id="step-4"><i class="ph ph-circle"></i> Checking hotel details</li>
+            <li id="step-5"><i class="ph ph-circle"></i> Building daily itinerary</li>
+        </ul>
     </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="js/toast.js"></script>
-    <script src="js/shared.js?v=1790532684"></script>
-    <script src="js/finalize.js?v=1790532684"></script>
+    <script src="js/i18n.js?v=1790695780"></script>
+    <script src="js/toast.js?v=1790695780"></script>
+    <script type="module" src="js/shared.js?v=1790695780"></script>
+    <script type="module" src="js/finalize.js?v=1790695780"></script>
 </body>
 </html>

@@ -1,0 +1,80 @@
+/* rtl.css — Minimal RTL overrides for Arabic layout */
+/* Only loaded alongside the existing CSS, never replaces anything */
+
+.rtl-active {
+    text-align: right;
+}
+
+/* Navbar: reverse flex direction */
+.rtl-active .nav-center,
+.rtl-active .nav-links,
+.rtl-active .nav-right {
+    direction: rtl;
+}
+
+/* Footer columns */
+.rtl-active .footer-top {
+    direction: rtl;
+}
+
+.rtl-active .footer-links ul {
+    text-align: right;
+}
+
+/* Destination toolbar */
+.rtl-active .dest-toolbar {
+    direction: rtl;
+}
+
+.rtl-active .search-box {
+    direction: rtl;
+}
+
+/* Journey sidebar */
+.rtl-active .sidebar-header,
+.rtl-active .sidebar-footer {
+    direction: rtl;
+}
+
+/* Finalize controls */
+.rtl-active .journey-controls {
+    direction: rtl;
+}
+
+/* Profile tabs */
+.rtl-active .profile-tabs {
+    direction: rtl;
+}
+
+/* Auth panels */
+.rtl-active .input-group label {
+    text-align: right;
+}
+
+/* Generic: buttons with icons — keep icon on correct side */
+.rtl-active .gold-btn-solid i,
+.rtl-active .gold-btn i,
+.rtl-active .card-btn i {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+/* Gallery header */
+.rtl-active .gallery-header {
+    direction: rtl;
+}
+
+/* Ticket panel */
+.rtl-active .ticket-summary .ticket-row {
+    direction: rtl;
+}
+
+/* Culture section */
+.rtl-active .culture-content {
+    text-align: right;
+}
+
+/* Stories sidebar */
+.rtl-active .stories-sidebar {
+    text-align: right;
+}

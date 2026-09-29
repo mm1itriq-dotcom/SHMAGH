@@ -336,7 +336,7 @@
 /* --- TICKET PANEL --- */
 .ticket-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
 .ticket-overlay.active { opacity: 1; visibility: visible; }
-.ticket-panel { position: fixed; top: 0; right: -500px; width: 450px; max-width: 100%; height: 100vh; background: #0a0a0a; border-left: 1px solid rgba(255,255,255,0.1); box-shadow: -5px 0 30px rgba(0,0,0,0.8); z-index: 1001; transition: right 0.4s cubic-bezier(0.25,1,0.5,1); display: flex; flex-direction: column; }
+.ticket-panel { position: fixed; top: 0; right: -600px; width: 550px; max-width: 100%; height: 100vh; background: #0a0a0a; border-left: 1px solid rgba(255,255,255,0.1); box-shadow: -5px 0 30px rgba(0,0,0,0.8); z-index: 1001; transition: right 0.4s cubic-bezier(0.25,1,0.5,1); display: flex; flex-direction: column; }
 .ticket-panel.active { right: 0; }
 .ticket-header { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
 .ticket-header h2 { font-family: var(--font-heading); color: var(--gold); font-size: 1.5rem; margin: 0; }
@@ -357,3 +357,110 @@
 .ticket-input-area input:focus { border-color: var(--gold); }
 .ticket-footer { padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
 .ticket-footer button { width: 100%; font-size: 1.1rem; padding: 1rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+
+
+/* Mobile Full Screen */
+@media (max-width: 768px) {
+    .ticket-panel { width: 100vw !important; }
+}
+
+/* Chat structure enhancements */
+.ticket-body { flex: 1; overflow-y: hidden; padding: 0; display: flex; flex-direction: column; }
+.ticket-chat-area { flex: 1; overflow-y: auto; scroll-behavior: smooth; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; border-radius: 0; background: transparent; }
+.ticket-input-area { padding: 1rem 1.5rem; background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.05); }
+
+/* Improved AI Itinerary Cards */
+.chat-message { font-size: 1rem; line-height: 1.6; padding: 1.5rem; }
+.ai-message { border-left: 4px solid var(--gold); background: rgba(212, 175, 55, 0.03); }
+.itinerary-card { 
+    background: rgba(255,255,255,0.05); 
+    border: 1px solid rgba(212, 175, 55, 0.3); 
+    border-radius: 12px; 
+    padding: 1.5rem; 
+    margin-bottom: 1.5rem; 
+}
+.itinerary-card h4 { 
+    color: var(--gold); 
+    margin-top: 0; 
+    margin-bottom: 1rem; 
+    font-size: 1.2rem; 
+    border-bottom: 1px solid rgba(255,255,255,0.1); 
+    padding-bottom: 0.5rem; 
+}
+.itinerary-card h5 { color: #fff; margin: 1rem 0 0.5rem 0; font-size: 1rem; }
+.itinerary-card p { margin: 0 0 1rem 0; color: #ccc; }
+.itinerary-card ul { margin: 0 0 1rem 0; padding-left: 1.2rem; color: #ccc; line-height: 1.6; }
+
+/* Budget Details Element */
+details.budget-details {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+details.budget-details summary {
+    color: var(--gold);
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    outline: none;
+    list-style: none; /* Hide default arrow */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+details.budget-details summary::after {
+    content: "▼";
+    font-size: 0.8rem;
+    transition: transform 0.3s;
+}
+details[open].budget-details summary::after {
+    transform: rotate(180deg);
+}
+details.budget-details summary::-webkit-details-marker {
+    display: none;
+}
+details.budget-details .budget-content {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* AI Action Buttons Inline */
+.ai-actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 2rem;
+}
+.ai-action-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid #555;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.ai-action-btn:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: var(--gold);
+    color: var(--gold);
+}
+.ai-action-btn.primary {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #000;
+    font-weight: 600;
+}
+.ai-action-btn.primary:hover {
+    background: #e6c84d;
+    color: #000;
+}
+
+.ticket-footer { display: none !important; }

@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - SHMAGH</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=1790460280">
-    <link rel="stylesheet" href="css/profile.css?v=1790459131">
+    <link rel="stylesheet" href="css/styles.css?v=1790695780">
+    <link rel="stylesheet" href="css/profile.css?v=1790695780">
+    <link rel="stylesheet" href="css/rtl.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         body {
@@ -18,11 +19,7 @@
         }
     </style>
 
-    <script>
-        if (!sessionStorage.getItem('shmagh_token')) {
-            window.location.href = 'index.html';
-        }
-    </script>
+    
 </head>
 <body>
     <!-- Navbar -->
@@ -31,20 +28,11 @@
             <a href="home.html"><img src="assets/logo.png" alt="SHMAGH" class="logo-img" style="height: 50px; width: auto;"></a>
         </div>
         <ul class="nav-links">
-            <li><a href="home.html">Home</a></li>
-            <li><a href="#" id="nav-converter">Converter</a></li>
+            <li><a href="home.html" data-i18n="navigation.home">Home</a></li>
             <li>
-                <div class="lang-switch-container">
-                    <span class="lang-label en-label active-lang">EN</span>
-                    <label class="switch">
-                        <input type="checkbox" id="lang-toggle">
-                        <span class="slider round"></span>
-                    </label>
-                    <span class="lang-label ar-label">عربي</span>
-                </div>
             </li>
             <li class="logout-container">
-                <a href="#" class="profile-btn logout-btn" aria-label="Log Out">
+                <a href="#" class="profile-btn logout-btn" aria-label="Log Out" data-i18n-aria="common.logout" data-i18n="common.logout">
                     <i class="ph ph-sign-out"></i> LOG OUT
                 </a>
             </li>
@@ -67,72 +55,73 @@
         </div>
         
                 <div class="profile-tabs">
-            <button class="tab-btn" data-tab="journal">JOURNAL</button>
-            <button class="tab-btn" data-tab="saved">SAVED</button>
-            <button class="tab-btn" data-tab="my-photos">MY PHOTOS</button>
-            <button class="tab-btn active" data-tab="settings">SETTINGS</button>
+            <button class="tab-btn" data-tab="journal" data-i18n="profile.tabs.journal">JOURNAL</button>
+            <button class="tab-btn" data-tab="saved" data-i18n="profile.tabs.saved">SAVED</button>
+            <button class="tab-btn" data-tab="my-photos" data-i18n="profile.tabs.my_photos">MY PHOTOS</button>
+            <button class="tab-btn active" data-tab="settings" data-i18n="profile.tabs.settings">SETTINGS</button>
         </div>
 
         <div class="tab-content active" id="settings">
             <div class="cards-wrapper">
                 <!-- Personal Info Card -->
                 <div class="profile-card">
-                    <h3 class="card-title">PERSONAL INFO</h3>
+                    <h3 class="card-title" data-i18n="profile.personal_info.title">PERSONAL INFO</h3>
                     
                     <div class="input-group" style="position: relative;">
-                        <label>Full Name</label>
+                        <label data-i18n="profile.personal_info.fullname_label">Full Name</label>
                         <input type="text" id="input-name" value="Ahmad Al-Fayed" readonly>
                     </div>
                     
                     <div class="input-group" style="position: relative;">
-                        <label>Email Address</label>
+                        <label data-i18n="profile.personal_info.email_label">Email Address</label>
                         <input type="email" id="input-email" value="ahmad@email.jo" readonly>
                     </div>
                 </div>
 
                 <!-- Security Card -->
                 <div class="profile-card">
-                    <h3 class="card-title">SECURITY</h3>
+                    <h3 class="card-title" data-i18n="profile.security.title">SECURITY</h3>
                     
                     <div class="input-group" style="position: relative;">
-                        <label>Current Password</label>
-                        <input type="password" placeholder="Enter current password">
+                        <label data-i18n="profile.security.current_password_label">Current Password</label>
+                        <input type="password" placeholder="Enter current password" data-i18n-placeholder="profile.security.current_password_placeholder">
                         <i class="ph ph-eye toggle-password" style="position: absolute; right: 1.25rem; bottom: 1.1rem; cursor: pointer; color: #888; font-size: 1.1rem;"></i>
                     </div>
                     
                     <div class="input-group" style="position: relative;">
-                        <label>New Password</label>
-                        <input type="password" placeholder="Enter new password">
+                        <label data-i18n="profile.security.new_password_label">New Password</label>
+                        <input type="password" placeholder="Enter new password" data-i18n-placeholder="profile.security.new_password_placeholder">
                         <i class="ph ph-eye toggle-password" style="position: absolute; right: 1.25rem; bottom: 1.1rem; cursor: pointer; color: #888; font-size: 1.1rem;"></i>
                     </div>
                     
-                    <button id="update-password-btn" class="gold-btn" style="margin-top: 1rem; border-radius: 8px;">UPDATE PASSWORD</button>
+                    <button id="update-password-btn" class="gold-btn" style="margin-top: 1rem; border-radius: 8px;" data-i18n="profile.security.update_password_btn">UPDATE PASSWORD</button>
                 </div>
             </div>
         </div>
         
         <div class="tab-content" id="journal">
             <div class="empty-state">
-                <p>Your journal is empty.</p>
+                <p data-i18n="profile.journal_empty">Your journal is empty.</p>
             </div>
         </div>
         
         <div class="tab-content" id="saved">
             <div class="empty-state">
-                <p>You haven't saved any destinations yet.</p>
+                <p data-i18n="profile.saved_empty">You haven't saved any destinations yet.</p>
             </div>
         </div>
     
         <div class="tab-content" id="my-photos">
             <div class="empty-state">
-                <p>You haven't uploaded any photos yet.</p>
+                <p data-i18n="profile.photos_empty">You haven't uploaded any photos yet.</p>
             </div>
         </div>
     </div>
 
-    <script src="js/converter.js"></script>
-    <script src="js/profile.js?v=1790533995"></script>
-    <script src="js/toast.js?v=3"></script>
-    <script src="js/shared.js?v=1790535007"></script>
+    <script src="js/i18n.js?v=1790695780"></script>
+    <script src="js/converter.js?v=1790695780"></script>
+    <script type="module" src="js/profile.js?v=1790695780"></script>
+    <script src="js/toast.js?v=1790695780"></script>
+    <script type="module" src="js/shared.js?v=1790695780"></script>
 </body>
 </html>

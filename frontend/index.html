@@ -13,13 +13,10 @@
     <!-- Phosphor Icons (for elegant, thin icons matching your design) -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <link rel="stylesheet" href="css/styles.css?v=1790460280">
+    <link rel="stylesheet" href="css/styles.css?v=1790695780">
+    <link rel="stylesheet" href="css/rtl.css">
 
-    <script>
-        if (sessionStorage.getItem('shmagh_token')) {
-            window.location.href = 'home.html';
-        }
-    </script>
+    
 </head>
 <body>
 
@@ -41,12 +38,12 @@
             <section class="left-content">
                 <div class="subtitle-wrapper">
                     <span class="gold-line"></span>
-                    <span class="subtitle">DISCOVER JORDAN</span>
+                    <span class="subtitle" data-i18n="auth.hero.subtitle">DISCOVER JORDAN</span>
                 </div>
                 
-                <h1 class="main-heading">Jordan, beyond the<br>familiar.</h1>
+                <h1 class="main-heading" data-i18n="auth.hero.title">Jordan, beyond the<br>familiar.</h1>
                 
-                <p class="description">
+                <p class="description" data-i18n="auth.hero.description">
                     Explore its places, stories, culture, and heritage through one connected journey.
                 </p>
             
@@ -57,88 +54,88 @@
                 
                 <!-- LOGIN FORM PANEL -->
                 <div class="glass-panel" id="loginPanel">
-                    <h2>Welcome back</h2>
-                    <p class="panel-subtitle">Sign in to continue.</p>
+                    <h2 data-i18n="auth.login.title">Welcome back</h2>
+                    <p class="panel-subtitle" data-i18n="auth.login.subtitle">Sign in to continue.</p>
                     
                     <form id="loginForm" class="auth-form">
                         <div class="input-group">
-                            <label>EMAIL ADDRESS</label>
+                            <label data-i18n="auth.fields.email_label">EMAIL ADDRESS</label>
                             <div class="input-wrapper">
                                 <i class="ph ph-envelope-simple"></i>
-                                <input type="email" placeholder="you@example.com" id="loginEmail">
+                                <input type="email" placeholder="you@example.com" id="loginEmail" data-i18n-placeholder="auth.fields.email_placeholder">
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <label>PASSWORD</label>
+                            <label data-i18n="auth.fields.password_label">PASSWORD</label>
                             <div class="input-wrapper">
                                 <i class="ph ph-lock-key"></i>
-                                <input type="password" placeholder="Enter your password" id="loginPassword">
+                                <input type="password" placeholder="Enter your password" id="loginPassword" data-i18n-placeholder="auth.fields.password_placeholder">
                                 <i class="ph ph-eye toggle-password"></i>
                             </div>
                         </div>
 
                         <div class="forgot-link">
-                            <a href="#">Forgot Password?</a>
+                            <a href="#" data-i18n="auth.login.forgot_password">Forgot Password?</a>
                         </div>
 
-                        <button type="submit" class="gold-btn">
+                        <button type="submit" class="gold-btn" data-i18n="auth.login.submit_btn">
                             Login <i class="ph ph-arrow-right"></i>
                         </button>
                     </form>
 
                     <div class="panel-footer">
-                        New to SHMAGH? <button type="button" class="text-btn" id="showSignup">Create Account</button>
+                        <span data-i18n="auth.login.new_user_prompt">New to SHMAGH?</span> <button type="button" class="text-btn" id="showSignup" data-i18n="auth.login.switch_to_signup">Create Account</button>
                     </div>
                 </div>
 
                 <!-- SIGN UP FORM PANEL (Hidden initially) -->
                 <div class="glass-panel hidden" id="signupPanel">
-                    <h2>Create your account</h2>
-                    <p class="panel-subtitle">Start your journey.</p>
+                    <h2 data-i18n="auth.signup.title">Create your account</h2>
+                    <p class="panel-subtitle" data-i18n="auth.signup.subtitle">Start your journey.</p>
                     
                     <form id="signupForm" class="auth-form">
                         <div class="input-group">
-                            <label>FULL NAME</label>
+                            <label data-i18n="auth.fields.fullname_label">FULL NAME</label>
                             <div class="input-wrapper">
                                 <i class="ph ph-user"></i>
-                                <input type="text" placeholder="Full Name" id="signupName">
+                                <input type="text" placeholder="Full Name" id="signupName" data-i18n-placeholder="auth.fields.fullname_placeholder">
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <label>EMAIL ADDRESS</label>
+                            <label data-i18n="auth.fields.email_label">EMAIL ADDRESS</label>
                             <div class="input-wrapper">
                                 <i class="ph ph-envelope-simple"></i>
-                                <input type="email" placeholder="Email Address" id="signupEmail">
+                                <input type="email" placeholder="Email Address" id="signupEmail" data-i18n-placeholder="auth.fields.email_placeholder">
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <label>PASSWORD</label>
+                            <label data-i18n="auth.fields.password_label">PASSWORD</label>
                             <div class="input-wrapper">
                                 <i class="ph ph-lock-key"></i>
-                                <input type="password" placeholder="Password" id="signupPassword">
+                                <input type="password" placeholder="Password" id="signupPassword" data-i18n-placeholder="auth.fields.password_placeholder">
                                 <i class="ph ph-eye toggle-password"></i>
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <label>CONFIRM PASSWORD</label>
+                            <label data-i18n="auth.fields.confirm_password_label">CONFIRM PASSWORD</label>
                             <div class="input-wrapper">
                                 <i class="ph ph-lock-key"></i>
-                                <input type="password" placeholder="Confirm Password" id="signupConfirmPassword">
+                                <input type="password" placeholder="Confirm Password" id="signupConfirmPassword" data-i18n-placeholder="auth.fields.confirm_password_placeholder">
                                 <i class="ph ph-eye toggle-password"></i>
                             </div>
                         </div>
 
-                        <button type="submit" class="gold-btn">
+                        <button type="submit" class="gold-btn" data-i18n="auth.signup.submit_btn">
                             Create Account <i class="ph ph-arrow-right"></i>
                         </button>
                     </form>
 
                     <div class="panel-footer">
-                        Already have an account? <button type="button" class="text-btn" id="showLogin">Sign in</button>
+                        <span data-i18n="auth.signup.existing_user_prompt">Already have an account?</span> <button type="button" class="text-btn" id="showLogin" data-i18n="auth.signup.switch_to_login">Sign in</button>
                     </div>
                 </div>
 
@@ -147,15 +144,16 @@
         </main>
 
         <!-- Footer -->
-        <footer class="page-footer">
+        <footer class="page-footer" data-i18n="auth.footer_copyright">
             © 2026 SHMAGH • The Hashemite Kingdom of Jordan
         </footer>
 
     </div>
 
     <!-- Script for Toggling and Validation -->
-    <script src="js/app.js?v=3"></script>
-    <script src="js/toast.js?v=3"></script>
-    <script src="js/shared.js?v=1790535007"></script>
+    <script src="js/i18n.js?v=1790695780"></script>
+    <script type="module" src="js/app.js?v=1790695780"></script>
+    <script src="js/toast.js?v=1790695780"></script>
+    <script type="module" src="js/shared.js?v=1790695780"></script>
 </body>
 </html>

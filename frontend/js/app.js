@@ -1,3 +1,4 @@
+import { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, doc, setDoc, updateProfile } from './firebase-init.js';
 // ==========================================
 // SHMAGH | LOGIN & SIGNUP TOGGLE LOGIC
 // ==========================================
@@ -37,93 +38,78 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- REAL SUBMIT HANDLERS (Connected to FastAPI & Firebase) ---
     
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
-        
         const email = document.getElementById("loginEmail").value;
         const password = document.getElementById("loginPassword").value;
-        
         if (!email || !password) {
             showToast("Please enter both email and password.", "error");
             return;
         }
-
         const btn = e.target.querySelector('button');
         const originalText = btn.innerHTML;
         btn.innerHTML = 'Logging in... <i class="ph ph-spinner ph-spin"></i>';
         btn.disabled = true;
-        
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
-            });
-            
-            const data = await response.json();
-            
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            sessionStorage.setItem('shmagh_token', userCredential.user.uid);
             btn.innerHTML = originalText;
             btn.disabled = false;
-
-            if (response.ok) {
-                // Save JWT Token to sessionStorage
-                sessionStorage.setItem("shmagh_token", data.token);
-                sessionStorage.setItem("shmagh_name", data.user.name);
-                sessionStorage.setItem("shmagh_email", email);
-                window.location.href = "home.html";
-            } else {
-                showToast(data.detail || "Login failed.", "error");
-            }
-        } catch (error) {
+            if (typeof showToast !== 'undefined') showToast("Login successful!", "success");
+            setTimeout(() => window.location.href = 'home.html', 1000);
+        } catch(error) {
             btn.innerHTML = originalText;
             btn.disabled = false;
-            showToast("Error connecting to server.", "error");
+            let errMsg = "Invalid email or password.";
+            if (error.code === 'auth/too-many-requests') errMsg = "Too many failed attempts. Please try again later.";
+            if (typeof showToast !== 'undefined') showToast(errMsg, "error");
         }
     });
 
     document.getElementById("signupForm").addEventListener("submit", async (e) => {
         e.preventDefault();
-        
         const name = document.getElementById("signupName").value;
         const email = document.getElementById("signupEmail").value;
         const password = document.getElementById("signupPassword").value;
-        const confirmPassword = document.getElementById("signupConfirmPassword").value;
-        
-        if (password !== confirmPassword) {
-            showToast("Passwords do not match!", "error");
+        if (!name || !email || !password) {
+            showToast("Please fill all fields.", "error");
             return;
         }
-
         const btn = e.target.querySelector('button');
         const originalText = btn.innerHTML;
-        btn.innerHTML = 'Creating Account... <i class="ph ph-spinner ph-spin"></i>';
+        btn.innerHTML = 'Signing up... <i class="ph ph-spinner ph-spin"></i>';
         btn.disabled = true;
-        
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, password })
-            });
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             
-            const data = await response.json();
-            
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-
-            if (response.ok) {
-                showToast("Account created successfully! Please login.", "success");
-                document.getElementById("signupForm").reset();
-                // trigger click on the "showLoginBtn" to slide back to login panel
-                const showLoginBtn = document.getElementById("showLogin");
-                if(showLoginBtn) showLoginBtn.click();
-            } else {
-                showToast(data.detail || "Registration failed.", "error");
+            // 1. Update the Auth profile itself so the name is always attached to the user!
+            if (typeof updateProfile !== 'undefined') {
+                await updateProfile(userCredential.user, { displayName: name }).catch(e=>console.log(e));
             }
-        } catch (error) {
+            
+            // 2. Try to save to Firestore (Don't let it crash the registration if rules block it)
+            try {
+                await setDoc(doc(db, "users", userCredential.user.uid), {
+                    email: email,
+                    full_name: name,
+                    created_at: new Date().toISOString()
+                });
+            } catch(dbErr) {
+                console.error("Firestore save failed (likely rules), but user registered:", dbErr);
+            }
+            
             btn.innerHTML = originalText;
             btn.disabled = false;
-            showToast("Error connecting to server.", "error");
+            if (typeof showToast !== 'undefined') showToast("Registration successful! Please login.", "success");
+            document.getElementById('showLogin').click();
+        } catch(error) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            let errMsg = "Registration failed.";
+            if (error.code === 'auth/email-already-in-use') errMsg = "This email is already registered.";
+            else if (error.code === 'auth/weak-password') errMsg = "Password should be at least 6 characters.";
+            else if (error.code === 'auth/invalid-email') errMsg = "Please enter a valid email address.";
+            if (typeof showToast !== 'undefined') showToast(errMsg, "error");
         }
     });
 });

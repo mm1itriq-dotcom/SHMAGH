@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1",
+    "name": "Petra",
+    "direction": "South",
+    "category": "Historical",
+    "image": "assets/petra_bg.jpg",
+    "description": "The Rose City, a world wonder."
+  },
+  {
+    "id": "2",
+    "name": "Wadi Rum",
+    "direction": "South",
+    "category": "Nature",
+    "image": "assets/wadirum_bg.jpg",
+    "description": "The Valley of the Moon."
+  },
+  {
+    "id": "3",
+    "name": "Dead Sea",
+    "direction": "West",
+    "category": "Relaxation",
+    "image": "assets/Dead Sea.jpg",
+    "description": "The lowest point on earth."
+  },
+  {
+    "id": "4",
+    "name": "Jerash",
+    "direction": "North",
+    "category": "Historical",
+    "image": "assets/Jerash.jpg",
+    "description": "Ancient Roman ruins."
+  },
+  {
+    "id": "5",
+    "name": "Amman",
+    "direction": "Middle",
+    "category": "Historical",
+    "image": "assets/Amman Citadel.jpg",
+    "description": "Historical heart of Amman."
+  },
+  {
+    "id": "6",
+    "name": "Aqaba",
+    "direction": "South",
+    "category": "Relaxation",
+    "image": "assets/Aqaba Reefs.jpg",
+    "description": "Red Sea resort and diving."
+  },
+  {
+    "id": "7",
+    "name": "Umm Qais",
+    "direction": "North",
+    "category": "Historical",
+    "image": "assets/umm_qais_hero.jpg",
+    "description": "Views of the Sea of Galilee."
+  },
+  {
+    "id": "8",
+    "name": "Ajloun",
+    "direction": "North",
+    "category": "Nature",
+    "image": "assets/Ajloun Forest.webp",
+    "description": "Lush forests and castle."
+  }
+]

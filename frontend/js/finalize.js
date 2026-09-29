@@ -1,3 +1,4 @@
+import { auth, db, doc, getDoc, updateDoc } from './firebase-init.js';
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Load Selected Destinations
     const savedJourney = sessionStorage.getItem('shmagh_journey');
@@ -109,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "The Mövenpick Resort Petra",
             location: "Petra, Jordan",
             stars: 5,
-            price: "$650",
+            price: "650JD",
             img: "assets/petra.jpg",
             desc: "5-star luxury at the entrance of Petra. Spacious rooms, fine dining..."
         },
@@ -118,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Seven Wonders Bedouin Camp",
             location: "Petra, Jordan",
             stars: 5,
-            price: "$520",
+            price: "520JD",
             img: "assets/Bedouin Camps.jpg",
             desc: "Experience traditional Bedouin hospitality in a luxury desert setting..."
         },
@@ -127,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Kempinski Hotel Ishtar",
             location: "Dead Sea, Jordan",
             stars: 5,
-            price: "$750",
+            price: "750JD",
             img: "assets/Dead Sea.jpg",
             desc: "Luxury infinity pools overlooking the Dead Sea with a world-class spa."
         },
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "W Amman Hotel",
             location: "Amman, Jordan",
             stars: 5,
-            price: "$400",
+            price: "400JD",
             img: "assets/Amman Downtown.jpg",
             desc: "A bold, contemporary architectural statement in the heart of modern Amman."
         }
@@ -209,6 +210,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const ticketOverlay = document.getElementById('ticket-overlay');
     const ticketPanel = document.getElementById('ticket-panel');
     const closeTicketBtn = document.getElementById('close-ticket-btn');
+    if (closeTicketBtn) {
+        closeTicketBtn.addEventListener('click', () => {
+            ticketOverlay.classList.remove('active');
+            ticketPanel.classList.remove('active');
+        });
+    }
+    if (ticketOverlay) {
+        ticketOverlay.addEventListener('click', () => {
+            ticketOverlay.classList.remove('active');
+            ticketPanel.classList.remove('active');
+        });
+    }
     const generateTicketBtn = document.getElementById('ticket-generate-btn');
     const chatArea = document.getElementById('ticket-chat-area');
     const feedbackInput = document.getElementById('chat-feedback-input');
@@ -220,80 +233,162 @@ document.addEventListener('DOMContentLoaded', () => {
     const tHotel = document.getElementById('ticket-hotel');
     const tPlaces = document.getElementById('ticket-places');
 
-    confirmBtn.addEventListener('click', () => {
-        const checkin = document.getElementById('checkin-date').value;
-        const checkout = document.getElementById('checkout-date').value;
-        const budget = document.getElementById('budget-input').value;
-
-        if (!checkin || !checkout) {
-            showToast("Please select Check-in and Check-out dates.", "warning");
-            return;
-        }
-
-        // Populate Ticket Summary
-        tDates.innerText = `${checkin} to ${checkout}`;
-        tGuests.innerText = guestsInput.value;
-        tBudget.innerText = budget ? budget + ' JOD' : 'Open Budget';
+    
+    
+    // --- Update Summary Live ---
+    function updateSummary() {
+        const checkinEl = document.getElementById('checkin-date');
+        const checkoutEl = document.getElementById('checkout-date');
+        const budgetEl = document.getElementById('budget-input');
         
-        if (selectedHotelId) {
-            const hotel = mockHotels.find(h => h.id === selectedHotelId);
-            tHotel.innerText = hotel.name;
+        const checkin = checkinEl ? checkinEl.value : '';
+        const checkout = checkoutEl ? checkoutEl.value : '';
+        const budget = budgetEl ? parseFloat(budgetEl.value) || 0 : 0;
+        
+        let guests = 2;
+        const guestsInput = document.getElementById('guests-input');
+        if (guestsInput && guestsInput.value) {
+            guests = parseInt(guestsInput.value) || 2;
         } else {
-            tHotel.innerText = "Any luxury hotel";
+            const ac = document.getElementById('adults-count');
+            const cc = document.getElementById('children-count');
+            if (ac && cc) guests = parseInt(ac.innerText) + parseInt(cc.innerText);
         }
         
-        tPlaces.innerText = myJourney.map(d => d.name).join(', ');
+        let d1 = checkin ? new Date(checkin) : new Date();
+        let d2 = checkout ? new Date(checkout) : new Date(d1.getTime() + 86400000 * 2);
+        let nights = Math.max(1, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+        
+        let hotelName = "Standard/Local";
+        let estHotelCost = 70 * nights;
+        if (typeof selectedHotelId !== 'undefined' && selectedHotelId) {
+            const h = mockHotels.find(x => x.id === selectedHotelId);
+            if (h) {
+                hotelName = h.name;
+                let ppn = 150;
+                if(h.name.toLowerCase().includes('kempinski') || h.name.toLowerCase().includes('st. regis')) ppn = 250;
+                else if(h.name.toLowerCase().includes('marriott')) ppn = 180;
+                estHotelCost = ppn * nights;
+            }
+        }
+        
+        // Safely update the TICKET panel summary (which shows when chatbot opens)
+        const td = document.getElementById('ticket-dates');
+        if (td) td.innerText = `${d1.toDateString()} - ${d2.toDateString()}`;
+        
+        const tg = document.getElementById('ticket-guests');
+        if (tg) tg.innerText = `${guests} Travelers`;
+        
+        const tb = document.getElementById('ticket-budget');
+        if (tb) tb.innerText = budget > 0 ? `${budget} JOD` : 'No Limit';
+        
+        const th = document.getElementById('ticket-hotel');
+        if (th) th.innerText = hotelName;
+        
+        const tp = document.getElementById('ticket-places');
+        if (tp && typeof myJourney !== 'undefined') {
+            tp.innerText = myJourney.map(d => d.name_en || d.name).join(', ');
+        }
+        
+        return {
+            checkin, checkout, budget, guests, hotelName, estHotelCost, nights
+        };
+    }
 
-        // Show Ticket
-        ticketOverlay.classList.add('active');
-        ticketPanel.classList.add('active');
-    });
+    // Generate My Journey (Formerly Confirm)
+    const btnContinue = document.getElementById('btn-continue-anyway');
+    const btnChangeHotel = document.getElementById('btn-change-hotel');
+    const btnAdjustBudget = document.getElementById('btn-adjust-budget');
 
-    closeTicketBtn.addEventListener('click', () => {
-        ticketOverlay.classList.remove('active');
-        ticketPanel.classList.remove('active');
-    });
-    ticketOverlay.addEventListener('click', () => {
-        ticketOverlay.classList.remove('active');
-        ticketPanel.classList.remove('active');
-    });
+    if(confirmBtn) {
+        // Overwrite the listener by replacing the clone
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        newConfirmBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            try {
+                const s = updateSummary();
+                const destNames = typeof myJourney !== 'undefined' ? myJourney.map(d => d.name_en || d.name) : [];
+                
+                let estTransport = destNames.length * 20;
+                let estFood = s.nights * s.guests * 40;
+                let estActivities = destNames.length * 15;
+                let totalEst = s.estHotelCost + estTransport + estFood + estActivities;
+                
+                if (s.budget > 0 && totalEst > s.budget) {
+                    const bwText = document.getElementById('budget-warning-text');
+                    if(bwText) bwText.innerText = `Your selected plan exceeds your budget by roughly ${totalEst - s.budget} JOD.`;
+                    
+                    const bwModal = document.getElementById('budget-warning-modal');
+                    if(bwModal) bwModal.style.display = 'flex';
+                } else {
+                    startGeneration();
+                }
+            } catch (err) {
+                console.error("Error in generate button:", err);
+                startGeneration(); // Fallback to generate anyway
+            }
+        });
+    }
 
-    // 6. Generate AI Itinerary
-    generateTicketBtn.addEventListener('click', async () => {
+    if(btnContinue) {
+        btnContinue.addEventListener('click', () => {
+            document.getElementById('budget-warning-modal').style.display = 'none';
+            startGeneration();
+        });
+    }
+    
+    if(btnChangeHotel) {
+        btnChangeHotel.addEventListener('click', () => {
+            document.getElementById('budget-warning-modal').style.display = 'none';
+            const hSearch = document.getElementById('hotel-search-input');
+            if(hSearch) hSearch.focus();
+        });
+    }
+    
+    if(btnAdjustBudget) {
+        btnAdjustBudget.addEventListener('click', () => {
+            document.getElementById('budget-warning-modal').style.display = 'none';
+            const bInput = document.getElementById('budget-input');
+            if(bInput) bInput.focus();
+        });
+    }
+
+    async function startGeneration() {
+        const s = updateSummary();
+        const destNames = myJourney.map(d => d.name_en || d.name);
+        
+        const overlay = document.getElementById('generation-loading-overlay');
+        overlay.style.display = 'flex';
+        
+        const steps = ['step-1', 'step-2', 'step-3', 'step-4', 'step-5'];
+        
+        for (let i = 0; i < steps.length; i++) {
+            setTimeout(() => {
+                const el = document.getElementById(steps[i]);
+                if(el) {
+                    el.innerHTML = `<i class="ph-fill ph-check-circle" style="color: var(--gold);"></i> ` + el.innerText.replace('✓ ', '').trim();
+                    el.style.color = '#fff';
+                }
+            }, i * 1500);
+        }
+
         const token = sessionStorage.getItem('shmagh_token');
-        if (!token) {
-            showToast("Please log in to generate an AI itinerary.", "error");
-            return;
-        }
-
-        const checkin = document.getElementById('checkin-date').value;
-        const checkout = document.getElementById('checkout-date').value;
-        const budget = document.getElementById('budget-input').value;
-        const feedback = feedbackInput.value.trim();
-
-        // Add user feedback message to chat
-        if (feedback) {
-            chatArea.innerHTML += `
-                <div class="chat-message user-message">
-                    <strong>You</strong>
-                    <p>${feedback}</p>
-                </div>
-            `;
-            feedbackInput.value = '';
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
-
-        // Show loading state
-        generateTicketBtn.innerHTML = `<i class="ph ph-spinner ph-spin"></i> Generating...`;
-        generateTicketBtn.disabled = true;
-
-        const d1 = new Date(checkin);
-        const d2 = new Date(checkout);
-        let days = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
-        if (days <= 0) days = 1;
         
-        const destNames = myJourney.map(d => d.name);
-        const selectedHotelName = selectedHotelId ? mockHotels.find(h => h.id === selectedHotelId).name : "";
+        const payload = {
+            dates: {
+                start: s.checkin || new Date().toISOString().split('T')[0],
+                end: s.checkout || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0]
+            },
+            travelers: s.guests,
+            budget: s.budget > 0 ? s.budget : 9999,
+            hotel: {
+                name: s.hotelName
+            },
+            destinations: destNames
+        };
 
         try {
             const response = await fetch('http://127.0.0.1:8000/api/generate-journey', {
@@ -302,114 +397,181 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    starting_location: "Amman",
-                    preferred_destinations: destNames,
-                    trip_duration_days: (checkin && checkout) ? Math.max(1, Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24))) : 3,
-                    number_of_travelers: guestData.adults || 2,
-                    budget: budget === "Not Specified" ? 1500.0 : parseFloat(budget.replace(/[^0-9.]/g, '')) || 1500.0,
-                    travel_style: [selectedHotelId ? "Luxury Resort Stay" : "Explorer"],
-                    hotel_preference: selectedHotelName || "Standard"
-                })
+                body: JSON.stringify(payload)
             });
-
             const data = await response.json();
-
+            
+            overlay.style.display = 'none';
+            ticketPanel.classList.add('active'); // Open Chatbot Ticket Panel
+            
             if (response.ok) {
-                const journeyData = data.journey || data;
-                let html = '<strong>AI Travel Concierge</strong><p>Here is your highly optimized itinerary:</p>';
-                
-                if (journeyData.recommended_trip) {
-                    html += '<p style="color: #ccc; margin-bottom: 1rem;">Optimized Route: <strong>' + journeyData.recommended_trip.route.join(' &rarr; ') + '</strong></p>';
+                if (data.error || (data.journey && data.journey.error)) {
+                    chatArea.innerHTML += `<div class="chat-message ai-message"><strong style="color:red;">API Error</strong><p>${data.error || data.journey.error}</p></div>`;
+                } else {
+                    renderJourneyToChat(data.journey || data);
                 }
-
-                if (journeyData.itinerary && Array.isArray(journeyData.itinerary)) {
-                    journeyData.itinerary.forEach((day) => {
-                        let locations = Array.isArray(day.locations) ? day.locations.join(', ') : day.locations || 'TBD';
-                        let activities = Array.isArray(day.activities) ? day.activities.join('<br>&bull; ') : day.activities || 'Sightseeing';
-                        
-                        html += '<div style="margin-top: 1rem; padding: 1rem; border-left: 2px solid var(--gold); background: rgba(0,0,0,0.3); border-radius: 4px;">';
-                        html += '<h4 style="color: var(--gold); margin: 0 0 0.5rem 0;">Day ' + day.day + ': ' + locations + '</h4>';
-                        html += '<div style="margin-bottom: 0.5rem;">';
-                        html += '<span style="font-size: 0.8rem; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem;">🚗 ' + (day.driving_time || 'N/A') + '</span>';
-                        html += '<span style="font-size: 0.8rem; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">💰 ' + (day.estimated_cost || 'N/A') + '</span>';
-                        html += '</div>';
-                        html += '<p style="font-size: 0.9rem; margin: 0 0 0.5rem 0;">&bull; ' + activities + '</p>';
-                        html += '</div>';
-                    });
-                }
-                
-                if (journeyData.cost_analysis) {
-                    html += '<div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">';
-                    html += '<h4 style="color: var(--gold); margin-bottom: 0.5rem;">Budget Breakdown</h4>';
-                    html += '<ul style="list-style: none; padding: 0; margin: 0; color: #ccc; font-size: 0.85rem;">';
-                    html += '<li>Transport: ' + journeyData.cost_analysis.transport_cost + ' JOD</li>';
-                    html += '<li>Hotels: ' + journeyData.cost_analysis.hotel_cost + ' JOD</li>';
-                    html += '<li>Food: ' + journeyData.cost_analysis.food_cost + ' JOD</li>';
-                    html += '<li>Activities: ' + journeyData.cost_analysis.activity_cost + ' JOD</li>';
-                    html += '<li><strong style="color: #fff;">Total Estimated: ' + journeyData.cost_analysis.total_cost + ' JOD</strong></li>';
-                    html += '</ul></div>';
-                }
-                
-                // Add Save to Journal Button
-                const ticketTitle = `Journey to ${destNames.join(', ')}`;
-                html += `
-                    <div style="margin-top: 1rem; text-align: center;">
-                        <button id="save-journal-btn" style="background: var(--gold); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-family: var(--font-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
-                            <i class="ph ph-book-bookmark"></i> Save to Journal
-                        </button>
-                    </div>
-                `;
-                chatArea.innerHTML += '<div class="chat-message ai-message" id="ai-response-container">' + html + '</div>';
-                
-                // Add listener to the new button
-                setTimeout(() => {
-                    const saveBtn = document.getElementById('save-journal-btn');
-                    if (saveBtn) {
-                        saveBtn.addEventListener('click', async () => {
-                            saveBtn.disabled = true;
-                            saveBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Saving...';
-                            try {
-                                const res = await fetch('http://127.0.0.1:8000/api/user/journal', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Authorization': `Bearer ${token}`
-                                    },
-                                    body: JSON.stringify({
-                                        title: ticketTitle,
-                                        itinerary_data: journeyData
-                                    })
-                                });
-                                if (res.ok) {
-                                    saveBtn.style.background = '#27ae60';
-                                    saveBtn.innerHTML = '<i class="ph-fill ph-check-circle"></i> Saved to Journal';
-                                    showToast("Itinerary saved to your Journal!", "success");
-                                } else {
-                                    throw new Error('Failed to save');
-                                }
-                            } catch (e) {
-                                saveBtn.disabled = false;
-                                saveBtn.innerHTML = '<i class="ph ph-book-bookmark"></i> Try Again';
-                                showToast("Failed to save to journal", "error");
-                            }
-                        });
-                    }
-                }, 100);
-    
             } else {
-                let errMsg = data.detail;
-                if (Array.isArray(errMsg)) {
-                    errMsg = errMsg.map(e => e.msg + " (" + e.loc.join('.') + ")").join(', ');
-                }
-                chatArea.innerHTML += '<div class="chat-message ai-message"><div style="background: rgba(255,0,0,0.1); padding: 1rem; border-left: 3px solid red; border-radius: 8px;"><h4 style="color: red; margin-top: 0;">ERROR</h4>' + (errMsg || JSON.stringify(data)) + '</div></div>';
+                chatArea.innerHTML += `<div class="chat-message ai-message"><strong style="color:red;">Error</strong><p>${JSON.stringify(data)}</p></div>`;
             }
-        } catch (error) {
+        } catch(e) {
+            overlay.style.display = 'none';
+            ticketPanel.classList.add('active');
             chatArea.innerHTML += `<div class="chat-message ai-message"><strong style="color:red;">Network Error</strong><p>Could not connect to AI service.</p></div>`;
-        } finally {
-            generateTicketBtn.innerHTML = `<i class="ph-fill ph-magic-wand"></i> Regenerate`;
-            generateTicketBtn.disabled = false;
-            chatArea.scrollTop = chatArea.scrollHeight;
         }
+    }
+
+    
+    function renderJourneyToChat(journeyData) {
+        const uniqueId = 'itinerary-' + Date.now();
+        const uniqueSaveId = 'save-btn-' + Date.now();
+        let html = `<div id="${uniqueId}" style="animation: fadeIn 0.5s ease;">`;
+        html += '<strong style="font-size: 1.2rem; color: var(--gold); display: block; margin-bottom: 1.5rem;"><i class="ph-fill ph-magic-wand"></i> AI Travel Concierge</strong>';
+        
+        if (journeyData.trip_summary) {
+            html += '<div class="itinerary-card">';
+            html += '<h4><i class="ph-fill ph-clipboard-text"></i> Trip Summary</h4>';
+            html += '<ul style="list-style: none; padding: 0; margin: 0;">';
+            html += `<li style="margin-bottom: 0.5rem;"><strong>Dates:</strong> ${journeyData.trip_summary.Dates}</li>`;
+            html += `<li style="margin-bottom: 0.5rem;"><strong>Travelers:</strong> ${journeyData.trip_summary.Travelers}</li>`;
+            html += `<li style="margin-bottom: 0.5rem;"><strong>Hotel:</strong> ${journeyData.trip_summary.Hotel}</li>`;
+            html += `<li style="margin-bottom: 0.5rem;"><strong>Budget:</strong> ${journeyData.trip_summary.Budget}</li>`;
+            html += '</ul></div>';
+        }
+        
+        if (journeyData.recommended_trip && journeyData.recommended_trip.route) {
+            html += '<div class="itinerary-card">';
+            html += '<h4><i class="ph-fill ph-map-pin-line"></i> Optimized Route</h4>';
+            html += `<p style="font-size: 1.1rem; color: #fff; font-weight: bold;">${journeyData.recommended_trip.route.join(' &rarr; ')}</p>`;
+            html += '</div>';
+        }
+
+        if (journeyData.itinerary && Array.isArray(journeyData.itinerary)) {
+            journeyData.itinerary.forEach((day) => {
+                html += '<div class="itinerary-card">';
+                html += `<h4>${day.day_title || ''} - ${day.date || ''}</h4>`;
+                if (day.theme) html += `<p style="font-style: italic; color: var(--gold);">${day.theme}</p>`;
+                
+                if (day.morning_activities && day.morning_activities.length) {
+                    html += `<h5>Morning</h5><p>&bull; ${day.morning_activities.join('<br>&bull; ')}</p>`;
+                }
+                if (day.afternoon_activities && day.afternoon_activities.length) {
+                    html += `<h5>Afternoon</h5><p>&bull; ${day.afternoon_activities.join('<br>&bull; ')}</p>`;
+                }
+                if (day.evening_activities && day.evening_activities.length) {
+                    html += `<h5>Evening</h5><p>&bull; ${day.evening_activities.join('<br>&bull; ')}</p>`;
+                }
+                if (day.driving_segments && day.driving_segments.length) {
+                    html += `<h5><i class="ph ph-car"></i> Driving</h5><p style="color: #aaa;">${day.driving_segments.join('<br>')}</p>`;
+                }
+                html += '</div>';
+            });
+        }
+        
+        if (journeyData.cost_analysis) {
+            html += '<details class="budget-details">';
+            html += `<summary><i class="ph-fill ph-wallet"></i> Budget Summary &nbsp; <span style="color: #fff; font-weight: normal;">${journeyData.cost_analysis.total_cost}</span></summary>`;
+            html += '<div class="budget-content">';
+            html += '<ul style="list-style: none; padding: 0; margin: 0;">';
+            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Transportation:</span> <span>${journeyData.cost_analysis.transport_cost}</span></li>`;
+            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Hotel:</span> <span>${journeyData.cost_analysis.hotel_cost}</span></li>`;
+            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Food:</span> <span>${journeyData.cost_analysis.food_cost}</span></li>`;
+            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Activities:</span> <span>${journeyData.cost_analysis.activity_cost}</span></li>`;
+            html += `<li style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; font-weight: bold; color: #fff;"><span>Total:</span> <span>${journeyData.cost_analysis.total_cost}</span></li>`;
+            html += '</ul></div></details>';
+        }
+
+        // Action Buttons inside the chat
+        html += '<div class="ai-actions-row">';
+        html += '<button class="ai-action-btn primary" onclick="document.getElementById(\'regen-re-generate\').click()"><i class="ph-fill ph-magic-wand"></i> Regenerate</button>';
+        html += `<button class="ai-action-btn" id="${uniqueSaveId}" style="background: #27ae60; border-color: #27ae60; color: #fff;"><i class="ph-fill ph-floppy-disk"></i> Save Journey</button>`;
+        html += '<button class="ai-action-btn" onclick="document.getElementById(\'regen-change-budget\').click()"><i class="ph ph-wallet"></i> Change Budget</button>';
+        html += '<button class="ai-action-btn" onclick="document.getElementById(\'regen-change-hotel\').click()"><i class="ph ph-bed"></i> Change Hotel</button>';
+        html += '<button class="ai-action-btn" onclick="document.getElementById(\'regen-add-dest\').click()"><i class="ph ph-plus"></i> Add Destination</button>';
+        html += '<button class="ai-action-btn" onclick="document.getElementById(\'ticket-overlay\').click()"><i class="ph ph-pencil-simple"></i> Modify Trip</button>';
+        html += '</div>';
+
+        html += '</div>'; // End unique container
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'chat-message ai-message';
+        wrapper.innerHTML = html;
+        chatArea.appendChild(wrapper);
+        
+        // Scroll specifically to this newly created itinerary!
+        setTimeout(() => {
+            const el = document.getElementById(uniqueId);
+            if (el) {
+                // We use scrollIntoView so the user sees "Trip Summary" clearly.
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+
+        // Make the Save to Journal button available in footer (optional, still nice)
+        setTimeout(() => {
+            const saveBtn = document.getElementById(uniqueSaveId);
+            if (saveBtn) {
+                saveBtn.addEventListener('click', async () => {
+                    try {
+                        saveBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Saving...';
+                        saveBtn.disabled = true;
+                        const destNames = typeof myJourney !== 'undefined' ? myJourney.map(d => d.name_en || d.name) : [];
+                        const ticketTitle = `Journey: ${destNames.join(', ')}`;
+                        const user = auth.currentUser;
+                        if (!user) throw new Error("Not logged in");
+                        
+                        const userRef = doc(db, "users", user.uid);
+                        const userSnap = await getDoc(userRef);
+                        let currentJournal = [];
+                        if (userSnap.exists() && userSnap.data().journal) {
+                            currentJournal = userSnap.data().journal;
+                        }
+                        
+                        const newEntry = {
+                            id: Date.now().toString(),
+                            title: ticketTitle,
+                            date: new Date().toISOString().split('T')[0],
+                            itinerary_data: journeyData
+                        };
+                        currentJournal.push(newEntry);
+                        
+                        await updateDoc(userRef, { journal: currentJournal });
+                        if (true) {
+                            saveBtn.style.background = '#219653';
+                            saveBtn.innerHTML = '<i class="ph-fill ph-check-circle"></i> Saved!';
+                            if(typeof showToast !== 'undefined') showToast("Itinerary saved to your Journal!", "success");
+                        } else {
+                            throw new Error('Failed to save');
+                        }
+                    } catch (e) {
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = '<i class="ph-fill ph-floppy-disk"></i> Try Again';
+                        if(typeof showToast !== 'undefined') showToast("Failed to save to journal", "error");
+                    }
+                });
+            }
+        }, 100);
+    }
+
+    // Regeneration Controls
+    document.getElementById('regen-change-hotel')?.addEventListener('click', () => {
+        ticketPanel.classList.remove('active');
+        document.getElementById('hotel-search-input').focus();
+    });
+    document.getElementById('regen-change-budget')?.addEventListener('click', () => {
+        ticketPanel.classList.remove('active');
+        document.getElementById('budget-input').focus();
+    });
+    document.getElementById('regen-add-dest')?.addEventListener('click', () => {
+        window.location.href = 'destinations.html';
+    });
+    document.getElementById('regen-remove-dest')?.addEventListener('click', () => {
+        ticketPanel.classList.remove('active');
+        document.getElementById('selected-destinations-container').scrollIntoView();
+    });
+    document.getElementById('regen-re-generate')?.addEventListener('click', () => {
+        chatArea.innerHTML = `<div class="chat-message ai-message"><p>Regenerating journey...</p></div>`;
+        ticketPanel.classList.remove('active');
+        startGeneration();
     });
 });
+

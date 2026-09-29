@@ -1,0 +1,281 @@
+{
+  "navigation": {
+    "home": "Home",
+    "explore": "Explore",
+    "stories": "Stories",
+    "culture": "Culture",
+    "weather": "Weather",
+    "toolkit": "Toolkit",
+    "gallery": "Gallery",
+    "converter": "Converter",
+    "favorite": "Favorite",
+    "destinations": "Destinations",
+    "profile": "Profile"
+  },
+  "common": {
+    "explore_jordan": "Explore Jordan",
+    "start_journey": "Start Your Journey",
+    "explore": "EXPLORE",
+    "share_journey": "Share Your Journey",
+    "active": "active",
+    "download_app": "Download App",
+    "back_to_home": "Back to Home",
+    "logout": "LOG OUT"
+  },
+  "home": {
+    "hero": {
+      "title": "A country with<br>more than one story.",
+      "description": "Explore places, stories, culture, and heritage through one connected journey.",
+      "scroll_indicator": "SCROLL TO DISCOVER"
+    },
+    "explore": {
+      "subtitle": "DISCOVER THE KINGDOM",
+      "heading": "Explore Jordan",
+      "description": "From ancient cities to landscapes shaped by time."
+    },
+    "stories": {
+      "title": "Stories of<br>Jordan",
+      "read_full_story": "Read Full Story →"
+    },
+    "culture": {
+      "title": "A culture that lives in the details.",
+      "mansaf_title": "The Mansaf",
+      "mansaf_desc": "More than just a dish, Mansaf is a symbol of Jordanian hospitality and generosity. Made with tender lamb cooked in fermented dried yogurt (jameed), it brings families and communities together in celebration and respect.",
+      "shemagh_title": "The Shemagh",
+      "shemagh_desc": "The red and white checkered Shemagh is a proud emblem of Jordanian heritage. Beyond protecting against the harsh desert climate, its unique tasseled edges (hadab) signify prestige, honor, and a deep connection to Bedouin roots.",
+      "embroidery_title": "Traditional Embroidery",
+      "embroidery_desc": "Jordanian embroidery (Tatreez) is a rich visual language. Every cross-stitch pattern, color palette, and motif tells a story of the woman's region, social status, and family history, preserving ancient traditions stitch by stitch."
+    },
+    "weather": {
+      "title": "Weather ☁️",
+      "subtitle": "Plan your journey across Jordan with perfect timing.",
+      "forecast_label": "7-DAY FORECAST",
+      "temp_unit": "HIGH / LOW · °C",
+      "loading_forecast": "Loading live forecast...",
+      "across_jordan": "ACROSS JORDAN",
+      "current_conditions": "Current Conditions",
+      "loading_current": "Loading live data..."
+    },
+    "toolkit": {
+      "supertitle": "CURATED ESSENTIALS - JORDAN",
+      "title": "The Traveler's Toolkit",
+      "subtitle": "Essential local apps to navigate Jordan with ease.",
+      "tags": {
+        "food_delivery": "FOOD DELIVERY",
+        "ride_hailing": "RIDE HAILING",
+        "intercity_travel": "INTERCITY TRAVEL",
+        "public_transit": "PUBLIC TRANSIT",
+        "car_rental": "CAR RENTAL"
+      },
+      "talabat_desc": "The most popular food delivery platform in Jordan. Order authentic local cuisine directly to your location.",
+      "petra_ride_desc": "A trusted local ride-hailing service. Safe, reliable, and the easiest way to navigate inside the city.",
+      "jett_desc": "Premium intercity bus travel. The most comfortable and affordable way to travel between Amman, Petra, and Aqaba.",
+      "amman_vision_desc": "Navigate the capital like a local. Track routes and schedules for Amman's modern public transit network.",
+      "jamal_desc": "Explore Jordan at your own pace. Reliable, top-rated local car rentals for your desert highway road trips."
+    },
+    "journal": {
+      "supertitle": "COMMUNITY PHOTO JOURNAL",
+      "title": "Jordan Through Your Eyes"
+    }
+  },
+  "categories": {
+    "historical": "Historical",
+    "nature": "Nature",
+    "religious": "Religious",
+    "religious_heritage": "RELIGIOUS HERITAGE",
+    "culture": "Culture",
+    "culture_entertainment": "CULTURE & ENTERTAINMENT",
+    "regions": "Regions"
+  },
+  "stories": {
+    "petra": {
+      "modal_title": "Petra - The Rose City",
+      "heading": "The Nabataeans: Masters of Rock and Water in the Heart of the Desert",
+      "paragraph_1": "Petra flourished as the capital of the Nabataeans since the 4th century BC, at the crossroads of caravan routes between the Arabian Peninsula and the Mediterranean. From the heart of the rose mountains, they built a city combining trade, rituals, and art in a scene unlike any other.",
+      "paragraph_2": "The Nabataeans mastered water engineering in a rain-scarce environment; they carved channels, reservoirs, and dams, turning flash floods into a life resource. Their majestic facades blended Eastern traditions with Hellenistic and Roman influences.",
+      "paragraph_3": "Their legacy remains carved in stone and in the memory of the place. Today, Petra stands as a witness to a great civilization.",
+      "title": "Petra"
+    },
+    "umm_qais": {
+      "modal_title": "Umm Qais: Where History Meets Nature",
+      "tale_label": "Tale of the Place",
+      "paragraph_1": "Umm Qais is distinguished by its charming view of the Sea of Galilee and the Golan Heights. Where the remains of the ancient city embrace green plains extending to the horizon. Known in the Greek era as \"Gadara\", it was one of the ten Decapolis cities and a thriving center for thought, poetry, and trade.",
+      "paragraph_2": "Its paved streets and black basalt columns reveal successive layers of Greek, Roman, and Byzantine civilizations. The Western Theater, carved into volcanic stone, stands as a witness to a rich cultural life that gathered the city's people and its visitors many centuries ago.",
+      "paragraph_3": "In Umm Qais, history is inseparable from nature; between Ottoman houses, baths, and temples, scenes open up to valleys and olive orchards, and at sunset, golden light covers the ancient stones, making the city seem like a living memory telling the story of the place and the human.",
+      "watch_documentary": "Watch Umm Qais Documentary",
+      "title": "Umm Qais"
+    },
+    "roman_theater": {
+      "tale_label": "Amman Antiquities - Tale of a Place",
+      "modal_title": "The Roman Theater: Echo of History",
+      "memory_label": "Memory of the City",
+      "paragraph_1": "The Roman Theater is considered one of the most important historical landmarks in the heart of the capital Amman, and a stone witness to the city's prosperity in the Roman era. Built in the second century AD, when Amman was known as Philadelphia, to welcome thousands of spectators in a majestic architectural space embraced by Mount Al-Joufeh.",
+      "paragraph_2": "Its seating was carved into the rock with a precise curve that gives the place exceptional acoustic properties; sounds reached the upper rows with amazing clarity. At its facade stand the remains of columns and corridors as a visual rhythm telling the brilliance of the builders, while the colors of the stone change with daylight from honey to bronze.",
+      "paragraph_3": "Today, the theater remains a living space for culture and memory, where concerts and festivals sit side by side with the footsteps of visitors, in a rare meeting between contemporary Amman and its ancient past; a place not only to be seen, but to listen to the echo of a history spanning centuries.",
+      "phase_1": "Phase 1",
+      "phase_2": "Phase 2",
+      "phase_3": "Phase 3",
+      "caption_title": "Reenactment Scene - Philadelphia Arena",
+      "caption_date": "Second Century AD",
+      "title": "Roman Theater"
+    },
+    "discover_more": "Discover More Tales"
+  },
+  "auth": {
+    "hero": {
+      "subtitle": "DISCOVER JORDAN",
+      "title": "Jordan, beyond the familiar.",
+      "description": "Explore its places, stories, culture, and heritage through one connected journey."
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue.",
+      "forgot_password": "Forgot Password?",
+      "submit_btn": "Login",
+      "new_user_prompt": "New to SHMAGH?",
+      "switch_to_signup": "Create Account"
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Start your journey.",
+      "submit_btn": "Create Account",
+      "existing_user_prompt": "Already have an account?",
+      "switch_to_login": "Sign in"
+    },
+    "fields": {
+      "email_label": "EMAIL ADDRESS",
+      "email_placeholder": "you@example.com",
+      "password_label": "PASSWORD",
+      "password_placeholder": "Enter your password",
+      "fullname_label": "FULL NAME",
+      "fullname_placeholder": "Full Name",
+      "confirm_password_label": "CONFIRM PASSWORD",
+      "confirm_password_placeholder": "Confirm Password"
+    },
+    "footer_copyright": "© 2026 SHMAGH • The Hashemite Kingdom of Jordan"
+  },
+  "destinations": {
+    "header": {
+      "title": "Discover Destinations",
+      "subtitle": "Select at least one destination to add to Your Journey to continue."
+    },
+    "search_placeholder": "Search destinations",
+    "filters": {
+      "direction_btn": "Direction"
+    },
+    "directions": {
+      "all": "All Directions",
+      "north": "North",
+      "south": "South",
+      "central": "Central",
+      "east": "East"
+    },
+    "sidebar": {
+      "title": "Your Journey",
+      "empty_state": "Your journey is empty.",
+      "empty_state_2": "Add destinations to start planning!",
+      "starting_cost_label": "Est. Starting Cost:",
+      "generate_btn": "Generate Itinerary"
+    },
+    "toolbar": {
+      "your_journey_btn": "Your Journey"
+    },
+    "ai_modal": {
+      "title": "Your AI Itinerary",
+      "loading_text": "Gemini AI is crafting your perfect journey..."
+    }
+  },
+  "finalize": {
+    "header": {
+      "title": "Finalize Your Journey",
+      "subtitle": "Selected Destinations"
+    },
+    "controls": {
+      "checkin_label": "Check-in",
+      "checkout_label": "Check-out",
+      "select_date_placeholder": "Select Date",
+      "guests_label": "Guests",
+      "guests_placeholder": "2 Adults",
+      "budget_label": "Budget (Optional)",
+      "budget_placeholder": "e.g. 1500 (JOD)"
+    },
+    "guests": {
+      "adults": "Adults",
+      "children": "Children",
+      "rooms": "Rooms"
+    },
+    "hotels": {
+      "search_placeholder": "Search luxury hotels..."
+    },
+    "actions": {
+      "confirm_btn": "Confirm"
+    },
+    "ticket": {
+      "title": "Your Journey Ticket",
+      "select_dates": "Select dates",
+      "default_guests": "2 Adults",
+      "default_budget": "Standard",
+      "no_hotel": "No hotel selected",
+      "loading_places": "Loading...",
+      "generate_journey_btn": "Generate Journey"
+    },
+    "chat": {
+      "sender_title": "AI Travel Concierge",
+      "welcome_message": "Ready to generate your custom itinerary? Click the button below, or tell me any specific requirements first!",
+      "feedback_placeholder": "E.g., I want a relaxed pace, focus on history..."
+    }
+  },
+  "gallery": {
+    "header": {
+      "title": "The Gallery",
+      "subtitle": "COMMUNITY STORIES · JORDAN",
+      "upload_photo": "+ Upload Your Photo"
+    },
+    "trending": {
+      "title": "Trending Journeys",
+      "subtitle": "SELECTED BY THE COMMUNITY"
+    }
+  },
+  "profile": {
+    "tabs": {
+      "journal": "JOURNAL",
+      "saved": "SAVED",
+      "my_photos": "MY PHOTOS",
+      "settings": "SETTINGS"
+    },
+    "personal_info": {
+      "title": "PERSONAL INFO",
+      "fullname_label": "Full Name",
+      "email_label": "Email Address"
+    },
+    "security": {
+      "title": "SECURITY",
+      "current_password_label": "Current Password",
+      "current_password_placeholder": "Enter current password",
+      "new_password_label": "New Password",
+      "new_password_placeholder": "Enter new password",
+      "update_password_btn": "UPDATE PASSWORD"
+    },
+    "journal_empty": "Your journal is empty.",
+    "saved_empty": "You haven't saved any destinations yet.",
+    "photos_empty": "You haven't uploaded any photos yet."
+  },
+  "footer": {
+    "brand_description": "Discover the untold stories of Jordan. A journey through time, culture, and nature.",
+    "explore_title": "Explore",
+    "resources_title": "Resources",
+    "links": {
+      "historical_sites": "Historical Sites",
+      "nature_desert": "Nature & Desert",
+      "bedouin_culture": "Bedouin Culture",
+      "cities_regions": "Cities & Regions",
+      "travelers_toolkit": "Traveler's Toolkit",
+      "community_journal": "Community Journal",
+      "faq_support": "FAQ & Support",
+      "contact_us": "Contact Us"
+    },
+    "copyright": "© 2026 SHMAGH. All rights reserved.",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service"
+  }
+}

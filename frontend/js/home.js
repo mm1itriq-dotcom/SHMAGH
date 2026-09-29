@@ -1,3 +1,17 @@
+// FULL STORY LOGIC
+window.navigateToStory = function() {
+    const storyItems = Array.from(document.querySelectorAll('.stories-list li'));
+    const activeIndex = storyItems.findIndex(li => li.classList.contains('active'));
+    
+    if (activeIndex === 0) {
+        window.location.href = 'story.html?topic=petra';
+    } else if (activeIndex === 1) {
+        window.location.href = 'story.html?topic=umm-qais';
+    } else if (activeIndex === 2) {
+        window.location.href = 'story.html?topic=roman';
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     // Story Data Database (Fetched from Backend, with fallback)
     let stories = [
@@ -192,15 +206,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Function to safely replace text nodes
-    // FULL STORY MODAL LOGIC
     // ==========================================
-    document.addEventListener("DOMContentLoaded", () => {
-        const readStoryBtn = document.getElementById('read-story-btn');
-    const fullStoryModal = document.getElementById('full-story-modal');
-    const closeStoryBtn = document.getElementById('close-story-btn');
-
-    if (readStoryBtn && fullStoryModal && closeStoryBtn) {
-        // Since the user might click a dynamically updated button or the DOM changes, we use document delegation
+    const readStoryBtn = document.getElementById('read-story-btn');
+    if (readStoryBtn) {
         document.body.addEventListener('click', (e) => {
             if (e.target && (e.target.id === 'read-story-btn' || e.target.closest('#read-story-btn'))) {
                 e.preventDefault();
@@ -209,31 +217,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 const activeIndex = storyItems.findIndex(li => li.classList.contains('active'));
                 
                 if (activeIndex === 0) {
-                    document.getElementById('full-story-modal').classList.add('active');
+                    window.location.href = 'story.html?topic=petra';
                 } else if (activeIndex === 1) {
-                    document.getElementById('umm-qais-modal').classList.add('active');
+                    window.location.href = 'story.html?topic=umm-qais';
                 } else if (activeIndex === 2) {
-                    document.getElementById('roman-modal').classList.add('active');
+                    window.location.href = 'story.html?topic=roman';
                 }
-                document.body.style.overflow = 'hidden';
             }
-        });
-
-        closeStoryBtn.addEventListener('click', () => {
-            fullStoryModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-        document.getElementById('close-umm-qais-btn').addEventListener('click', () => {
-            document.getElementById('umm-qais-modal').classList.remove('active');
-            document.body.style.overflow = '';
-        });
-        document.getElementById('close-roman-btn').addEventListener('click', () => {
-            document.getElementById('roman-modal').classList.remove('active');
-            document.body.style.overflow = '';
         });
     }
 
-        // Handle Video Play Buttons
+    // Handle Video Play Buttons
         document.querySelectorAll('.story-video-thumb .play-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const container = this.parentElement;
@@ -251,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-    }); // End DOMContentLoaded for Modals
+    
 
 // ==========================================
 // TRANSLATION ENGINE
