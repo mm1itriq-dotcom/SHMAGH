@@ -110,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "The Mövenpick Resort Petra",
             location: "Petra, Jordan",
             stars: 5,
-            price: "650JD",
-            img: "assets/petra.jpg",
+            price: "225JD",
+            img: "assets/The Mövenpick Resort Petra.png",
             desc: "5-star luxury at the entrance of Petra. Spacious rooms, fine dining..."
         },
         {
@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Seven Wonders Bedouin Camp",
             location: "Petra, Jordan",
             stars: 5,
-            price: "520JD",
-            img: "assets/Bedouin Camps.jpg",
+            price: "170JD",
+            img: "assets/Seven Wonders Bedouin Camp.jpg",
             desc: "Experience traditional Bedouin hospitality in a luxury desert setting..."
         },
         {
@@ -128,8 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Kempinski Hotel Ishtar",
             location: "Dead Sea, Jordan",
             stars: 5,
-            price: "750JD",
-            img: "assets/Dead Sea.jpg",
+            price: "270JD",
+            img: "assets/Kempinski Hotel Ishtar.jpg",
             desc: "Luxury infinity pools overlooking the Dead Sea with a world-class spa."
         },
         {
@@ -137,8 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "W Amman Hotel",
             location: "Amman, Jordan",
             stars: 5,
-            price: "400JD",
-            img: "assets/Amman Downtown.jpg",
+            price: "210JD",
+            img: "assets/W Amman Hotel.jpg",
             desc: "A bold, contemporary architectural statement in the heart of modern Amman."
         }
     ];

@@ -63,6 +63,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             allDestinations = destSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
+        
+        // Remove duplicates by name/title
+        const seenNames = new Set();
+        allDestinations = allDestinations.filter(d => {
+            const n = (d.name || d.title || '').toLowerCase().trim();
+            if (!n || seenNames.has(n)) return false;
+            seenNames.add(n);
+            return true;
+        });
+        
         renderGrid();
     } catch (err) {
         console.error("Error fetching destinations from Firebase:", err);

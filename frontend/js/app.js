@@ -1,4 +1,4 @@
-import { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, doc, setDoc, updateProfile } from './firebase-init.js';
+import { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, doc, setDoc, updateProfile, signOut } from './firebase-init.js';
 // ==========================================
 // SHMAGH | LOGIN & SIGNUP TOGGLE LOGIC
 // ==========================================
@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.innerHTML = 'Signing up... <i class="ph ph-spinner ph-spin"></i>';
         btn.disabled = true;
         try {
+            sessionStorage.setItem('is_signing_up', 'true');
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             
             // 1. Update the Auth profile itself so the name is always attached to the user!
@@ -87,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 await updateProfile(userCredential.user, { displayName: name }).catch(e=>console.log(e));
             }
             
-            // 2. Try to save to Firestore (Don't let it crash the registration if rules block it)
+            // 2. Try to save to Firestore
             try {
                 await setDoc(doc(db, "users", userCredential.user.uid), {
                     email: email,
@@ -98,11 +99,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Firestore save failed (likely rules), but user registered:", dbErr);
             }
             
+            // 3. Immediately sign out the user so they must manually log in
+            await signOut(auth);
+            sessionStorage.removeItem('is_signing_up');
+            
             btn.innerHTML = originalText;
             btn.disabled = false;
             if (typeof showToast !== 'undefined') showToast("Registration successful! Please login.", "success");
             document.getElementById('showLogin').click();
+            // Optional: reset form fields
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
         } catch(error) {
+            sessionStorage.removeItem('is_signing_up');
             btn.innerHTML = originalText;
             btn.disabled = false;
             let errMsg = "Registration failed.";

@@ -5,6 +5,10 @@ import { auth, onAuthStateChanged, signOut } from './firebase-init.js';
     const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.includes('index.html');
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            if (sessionStorage.getItem('is_signing_up') === 'true') {
+                // Do not redirect or set session yet, we are signing up and will sign out immediately in app.js
+                return;
+            }
             sessionStorage.setItem('shmagh_token', user.uid);
             // If they are on index.html (login page) and already logged in, send them to home
             if (isIndex) {

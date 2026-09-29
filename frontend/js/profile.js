@@ -67,11 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; padding: 1rem;">';
         favorites.forEach(fav => {
             html += `
-                <div class="saved-item-card">
-                    <h4><i class="ph-fill ph-map-pin"></i> ${fav}</h4>
-                    <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                        <button class="gold-btn-solid" onclick="window.location.href='destinations.html'" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View</button>
-                        <button class="remove-fav-btn" data-dest="${fav}" style="background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 1.2rem;"><i class="ph-fill ph-trash"></i></button>
+                <div class="saved-item-card" style="position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+                    <button class="remove-fav-btn" data-dest="${fav}" style="position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 1.2rem;"><i class="ph-fill ph-trash"></i></button>
+                    <h4 style="padding-right: 2rem;"><i class="ph-fill ph-map-pin"></i> ${fav}</h4>
+                    <div style="margin-top: 1.5rem;">
+                        <button class="gold-btn" onclick="window.location.href='destinations.html'" style="width: 100%; padding: 0.6rem; font-size: 0.9rem; text-align: center;">VIEW</button>
                     </div>
                 </div>
             `;
@@ -115,7 +115,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let html = '<div class="journal-list">';
-        journalEntries.forEach(entry => {
+        journalEntries.forEach((entry, index) => {
+            
+            // Build the details HTML
+            let detailsHtml = '<div class="journal-details" id="journal-details-' + index + '" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">';
+            const data = entry.itinerary_data;
+            if (data) {
+                if (data.trip_summary) {
+                    detailsHtml += `<div style="margin-bottom: 1rem;"><strong>Trip Summary</strong><br>Dates: ${data.trip_summary.Dates}<br>Travelers: ${data.trip_summary.Travelers}<br>Hotel: ${data.trip_summary.Hotel}<br>Budget: ${data.trip_summary.Budget}</div>`;
+                }
+                if (data.itinerary && Array.isArray(data.itinerary)) {
+                    data.itinerary.forEach(day => {
+                        detailsHtml += `<div style="margin-bottom: 1rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;">`;
+                        detailsHtml += `<strong style="color: var(--gold);">${day.day_title || ''} - ${day.date || ''}</strong><br>`;
+                        if (day.theme) detailsHtml += `<em style="color: #aaa; font-size: 0.9rem;">${day.theme}</em><br><br>`;
+                        if (day.morning_activities) detailsHtml += `<strong>Morning:</strong> ${day.morning_activities.join(', ')}<br>`;
+                        if (day.afternoon_activities) detailsHtml += `<strong>Afternoon:</strong> ${day.afternoon_activities.join(', ')}<br>`;
+                        if (day.evening_activities) detailsHtml += `<strong>Evening:</strong> ${day.evening_activities.join(', ')}<br>`;
+                        if (day.driving_segments) detailsHtml += `<strong>Driving:</strong> ${day.driving_segments.join(', ')}<br>`;
+                        detailsHtml += `</div>`;
+                    });
+                }
+                if (data.cost_analysis) {
+                    detailsHtml += `<div style="margin-top: 1rem;"><strong>Budget Summary</strong><br>Total: ${data.cost_analysis.total_cost}</div>`;
+                }
+            } else {
+                detailsHtml += '<p>No details available.</p>';
+            }
+            detailsHtml += '</div>';
+
             html += `
                 <div class="journal-card">
                     <div class="journal-header">
@@ -123,14 +151,31 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span>${entry.date || ''}</span>
                     </div>
                     <div class="journal-body">
-                        <p><strong>Route:</strong> ${entry.itinerary_data?.recommended_trip?.route?.join(' &rarr; ') || 'N/A'}</p>
-                        <button class="gold-btn-outline view-journal-btn" data-id="${entry.id}">View Details</button>
+                        <p style="margin-bottom: 1rem;"><strong>Route:</strong> ${entry.itinerary_data?.recommended_trip?.route?.join(' &rarr; ') || 'N/A'}</p>
+                        <button class="gold-btn view-journal-btn" data-index="${index}" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">View Details</button>
+                        ${detailsHtml}
                     </div>
                 </div>
             `;
         });
         html += '</div>';
         journalContainer.innerHTML = html;
+
+        // Attach event listeners for View Details
+        const viewBtns = journalContainer.querySelectorAll('.view-journal-btn');
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = e.currentTarget.getAttribute('data-index');
+                const detailsDiv = document.getElementById('journal-details-' + idx);
+                if (detailsDiv.style.display === 'none') {
+                    detailsDiv.style.display = 'block';
+                    e.currentTarget.innerText = 'Hide Details';
+                } else {
+                    detailsDiv.style.display = 'none';
+                    e.currentTarget.innerText = 'View Details';
+                }
+            });
+        });
     }
 
     loadUserData();
