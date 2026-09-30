@@ -85,7 +85,7 @@
         <div style="position: relative; width: 80%; height: 80%; background: #111; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
             <button id="close-map-btn" style="position: absolute; top: 1rem; right: 1rem; z-index: 2; background: rgba(0,0,0,0.5); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;"><i class="ph ph-x"></i></button>
             <div id="map" style="width: 100%; height: 100%;"></div>
-            <div id="map-title-overlay" style="position: absolute; bottom: 2rem; left: 2rem; z-index: 2; background: rgba(0,0,0,0.7); padding: 1rem 2rem; border-radius: 8px; color: #fff; font-family: var(--font-serif); font-size: 1.5rem; border: 1px solid var(--gold);">Location</div>
+            <div id="map-title-overlay" style="position: absolute; bottom: 2rem; left: 2rem; z-index: 2; background: rgba(0,0,0,0.7); padding: 1rem 2rem; border-radius: 8px; color: #fff; font-family: var(--font-serif); font-size: 1.5rem; border: 1px solid var(--gold);" data-i18n="destinations.map_location">Location</div>
         </div>
     </div>
 
@@ -97,7 +97,7 @@
             <button id="close-sidebar-btn" class="sidebar-close"><i class="ph ph-x"></i></button>
         </div>
         <div class="sidebar-content" id="journey-items-container">
-            <p class="empty-state">Your journey is empty.<br>Add destinations to start planning!</p>
+            <p class="empty-state"><span data-i18n="destinations.sidebar.empty_state">Your journey is empty.</span><br><span data-i18n="destinations.sidebar.empty_state_2">Add destinations to start planning!</span></p>
         </div>
         <div class="sidebar-footer">
             <div class="total-cost">

@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const activeLabel = document.createElement("span");
             activeLabel.className = "active-label";
             activeLabel.textContent = "active";
+            activeLabel.setAttribute("data-i18n", "common.active");
             item.appendChild(activeLabel);
 
             // 4. Update the right panel content with a smooth fade-out / fade-in transition
@@ -84,9 +85,17 @@ document.addEventListener("DOMContentLoaded", () => {
             
             
                 // Swap the text content while it is invisible
-                titleElement.innerHTML = stories[index].title;
-                paragraphs[0].textContent = stories[index].p1;
-                paragraphs[1].textContent = stories[index].p2;
+                const keys = ["petra", "umm_qais", "roman_theater"];
+                titleElement.setAttribute("data-i18n", `home.stories.cards.${keys[index]}.title`);
+                paragraphs[0].setAttribute("data-i18n", `home.stories.cards.${keys[index]}.p1`);
+                paragraphs[1].setAttribute("data-i18n", `home.stories.cards.${keys[index]}.p2`);
+                if (window.setLanguage) {
+                    window.setLanguage(document.documentElement.lang || "en");
+                } else {
+                    titleElement.innerHTML = stories[index].title;
+                    paragraphs[0].textContent = stories[index].p1;
+                    paragraphs[1].textContent = stories[index].p2;
+                }
                 
                 // Fade back in
                 glassCard.style.opacity = "1"; 
@@ -145,8 +154,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const weather = getWeatherDesc(forecastData.daily.weathercode[i]);
                 
                 const li = document.createElement('li');
-                li.innerHTML = '<span class="day-name">' + dayName + '</span>' +
-                    '<span class="day-condition"><i class="ph ' + weather.icon + '"></i> ' + weather.text + '</span>' +
+                li.innerHTML = '<span class="day-name" data-i18n="home.weather.days.' + dayName + '">' + dayName + '</span>' +
+                    '<span class="day-condition"><i class="ph ' + weather.icon + '"></i> <span data-i18n="home.weather.conditions.' + weather.text + '">' + weather.text + '</span></span>' +
                     '<span class="day-temps"><strong>' + max + '&deg;</strong> ' + min + '&deg;</span>';
                 forecastList.appendChild(li);
             }
@@ -157,15 +166,17 @@ document.addEventListener("DOMContentLoaded", () => {
             CITIES.forEach((city, i) => {
                 const temp = Math.round(currentData[i].current_weather.temperature);
                 const li = document.createElement('li');
-                li.innerHTML = '<span class="city-name">' + city.name + '</span>' +
+                li.innerHTML = '<span class="city-name" data-i18n="home.weather.cities.' + city.name + '">' + city.name + '</span>' +
                     '<span class="city-temp">' + temp + '&deg;C</span>';
                 currentList.appendChild(li);
             });
+            if (window.setLanguage) window.setLanguage(document.documentElement.lang || 'en');
             
         } catch (error) {
             console.error("Error fetching weather:", error);
             const forecastList = document.getElementById('forecast-list');
-            if (forecastList) forecastList.innerHTML = '<li style="color:red">Failed to load weather.</li>';
+            if (forecastList) forecastList.innerHTML = '<li style="color:red" data-i18n="home.weather.failed">Failed to load weather.</li>';
+            if (window.setLanguage) window.setLanguage(document.documentElement.lang || 'en');
         }
     }
 
@@ -198,13 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     
     // ==========================================
-    
-
-    const ar2en = {};
-    for (const [en, ar] of Object.entries(globalEn2Ar)) {
-        ar2en[ar] = en;
-    }
-
     // Function to safely replace text nodes
     // ==========================================
     const readStoryBtn = document.getElementById('read-story-btn');
@@ -244,117 +248,3 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         });
-
-    
-
-// ==========================================
-// TRANSLATION ENGINE
-// ==========================================
-const globalEn2Ar = {
-    "1. Petra": "1. البتراء",
-    "2. Umm Qais": "2. أم قيس",
-    "3. Romanian Theater": "3. المدرج الروماني",
-    "Umm Qais": "أم قيس",
-    "Romanian Theater": "المدرج الروماني",
-    "Umm Qais: Where History Meets Nature": "أم قيس: حيث يلتقي التاريخ بالطبيعة",
-    "Tale of the Place": "حكاية المكان",
-    "Umm Qais is distinguished by its charming view of the Sea of Galilee and the Golan Heights. Where the remains of the ancient city embrace green plains extending to the horizon. Known in the Greek era as \"Gadara\", it was one of the ten Decapolis cities and a thriving center for thought, poetry, and trade.": "تتميز أم قيس بإطلالتها الساحرة على بحيرة طبريا وهضبة الجولان. حيث تعانق أطلال المدينة القديمة السهول الخضراء الممتدة إلى الأفق. عُرفت في العصر اليوناني باسم \"جدارا\"، وكانت إحدى مدن حلف الديكابولس العشر، ومركزاً مزدهراً للفكر والشعر والتجارة.",
-    "Its paved streets and black basalt columns reveal successive layers of Greek, Roman, and Byzantine civilizations. The Western Theater, carved into volcanic stone, stands as a witness to a rich cultural life that gathered the city's people and its visitors many centuries ago.": "تكشف شوارعها المرصوفة وأعمدتها البازلتية السوداء عن طبقات متعاقبة من الحضارات اليونانية والرومانية والبيزنطية. ويقف المسرح الغربي المنحوت في الحجر البركاني شاهداً على حياة ثقافية غنية جمعت أهل المدينة وزوارها قبل قرون عديدة.",
-    "In Umm Qais, history is inseparable from nature; between Ottoman houses, baths, and temples, scenes open up to valleys and olive orchards, and at sunset, golden light covers the ancient stones, making the city seem like a living memory telling the story of the place and the human.": "في أم قيس، لا ينفصل التاريخ عن الطبيعة؛ فبين البيوت العثمانية والحمامات والمعابد، تنفتح المشاهد على الوديان وبساتين الزيتون، وعند غروب الشمس، يغطي الضوء الذهبي الحجارة القديمة، لتبدو المدينة وكأنها ذاكرة حية تروي قصة المكان والإنسان.",
-    "Watch Umm Qais Documentary": "شاهد فيلم وثائقي عن أم قيس",
-    "active": "نشط",
-    "A country with<br>more than one story.": "بلد بأكثر من<br>قصة.",
-    "Explore places, stories, culture, and heritage through one connected journey.": "اكتشف الأماكن، القصص، الثقافة، والتراث من خلال رحلة واحدة متصلة.",
-    "Weather ☀️☁️": "الطقس ☀️☁️",
-    "Plan your journey across Jordan with perfect timing.": "خطط لرحلتك في جميع أنحاء الأردن في الوقت المثالي.",
-    "Share Your Journey": "شارك رحلتك",
-    "Explore Jordan": "استكشف الأردن",
-    "Start Your Journey": "ابدأ رحلتك",
-    "Est. Starting Cost:": "التكلفة التقديرية:",
-    "2. ": "2. ",
-    "3. ": "3. ",
-    " Umm Qais": " أم قيس",
-    " Romanian Theater": " المدرج الروماني",
-    "A view over three<br>countries.": "إطلالة على ثلاث<br>دول.",
-    "Perched on a hilltop, Umm Qais offers a sweeping view of the Sea of Galilee and the Golan Heights. Once known as Gadara, it was a center of philosophy and art in the ancient Decapolis.": "تتربع أم قيس على قمة تل، وتقدم إطلالة بانورامية على بحيرة طبريا وهضبة الجولان. عُرفت قديماً باسم جدارا، وكانت مركزاً للفلسفة والفن في حلف الديكابولس القديم.",
-    "Walking through its black basalt ruins, you can still feel the intellectual vibrancy that once attracted poets, writers, and thinkers from across the ancient world.": "عند السير عبر أطلالها البازلتية السوداء، لا يزال بإمكانك الشعور بالحيوية الفكرية التي جذبت ذات يوم الشعراء والكتاب والمفكرين من جميع أنحاء العالم القديم.",
-    "Echoes of the ancient<br>amphitheater.": "أصداء<br>المدرج القديم.",
-    "Built into the hillside of Amman, this spectacular 6,000-seat 2nd-century Roman theater remains a testament to Roman architectural brilliance and urban planning.": "بُني هذا المدرج الروماني المذهل الذي يتسع لـ 6000 مقعد في القرن الثاني الميلادي في سفح جبل في عمان، ولا يزال شاهداً على براعة العمارة الرومانية والتخطيط الحضري.",
-    "Even today, it serves as a gathering place for locals and travelers, hosting cultural events where the ancient acoustics still carry voices perfectly across the stone tiers.": "حتى اليوم، لا يزال يمثل مكاناً لتجمع السكان المحليين والمسافرين، حيث يستضيف الفعاليات الثقافية التي لا تزال فيها الصوتيات القديمة تحمل الأصوات بشكل مثالي عبر المدرجات الحجرية.",
-    "A view over three countries.": "إطلالة على ثلاث دول.",
-    "Echoes of the ancient amphitheater.": "أصداء المدرج القديم.",
-    "HISTORICAL": "تاريخي",
-    "NATURE": "طبيعة",
-    "RELIGIOUS HERITAGE": "تراث ديني",
-    "CULTURE & ENTERTAINMENT": "ثقافة وترفيه",
-    "REGIONS": "مناطق",
-    "EXPLORE": "استكشف",
-    "Home": "الرئيسية",
-    "Destinations": "الوجهات",
-    "Gallery": "المعرض",
-    "Converting...": "جاري التحويل...",
-    "Convert": "تحويل",
-    "Currency Converter": "محول العملات",
-    "Converter": "محول العملات"
-};
-
-const globalAr2En = Object.fromEntries(Object.entries(globalEn2Ar).map(([k, v]) => [v, k]));
-
-function walkTextNodes(node, dictionary) {
-    if (node.nodeType === 3) {
-        let originalText = node.nodeValue;
-        let normalizedText = originalText.trim();
-        if (normalizedText && dictionary[normalizedText]) {
-            node.nodeValue = originalText.replace(normalizedText, dictionary[normalizedText]);
-        }
-    } else if (node.nodeType === 1 && node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE") {
-        for (let i = 0; i < node.childNodes.length; i++) {
-            walkTextNodes(node.childNodes[i], dictionary);
-        }
-    }
-}
-
-function applyTranslation(lang) {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    const dict = lang === 'ar' ? globalEn2Ar : globalAr2En;
-    walkTextNodes(document.body, dict);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const savedLang = localStorage.getItem('shmagh_lang') || 'en';
-    const langToggle = document.getElementById('lang-toggle');
-    const enLabel = document.querySelector('.en-label');
-    const arLabel = document.querySelector('.ar-label');
-    
-    if (langToggle) {
-        // Init toggle state
-        if (savedLang === 'ar') {
-            langToggle.checked = true;
-            if(enLabel) enLabel.classList.remove('active-lang');
-            if(arLabel) arLabel.classList.add('active-lang');
-        } else {
-            langToggle.checked = false;
-            if(enLabel) enLabel.classList.add('active-lang');
-            if(arLabel) arLabel.classList.remove('active-lang');
-        }
-        
-        langToggle.addEventListener('change', (e) => {
-            const newLang = e.target.checked ? 'ar' : 'en';
-            localStorage.setItem('shmagh_lang', newLang);
-            
-            if (newLang === 'ar') {
-                if(enLabel) enLabel.classList.remove('active-lang');
-                if(arLabel) arLabel.classList.add('active-lang');
-            } else {
-                if(enLabel) enLabel.classList.add('active-lang');
-                if(arLabel) arLabel.classList.remove('active-lang');
-            }
-            applyTranslation(newLang);
-        });
-    }
-    if (savedLang === 'ar') {
-        setTimeout(() => applyTranslation('ar'), 100);
-    }
-});
-

@@ -120,17 +120,17 @@
         
         <!-- JOURNEY SUMMARY -->
         <div id="journey-summary-container" class="journey-summary" style="background: rgba(0,0,0,0.4); border: 1px solid var(--gold); border-radius: 8px; padding: 1.5rem; margin-top: 2rem; display: none;">
-            <h3 style="color: var(--gold); margin-top: 0; margin-bottom: 1rem;"><i class="ph-fill ph-clipboard-text"></i> Your Journey Summary</h3>
+            <h3 style="color: var(--gold); margin-top: 0; margin-bottom: 1rem;"><i class="ph-fill ph-clipboard-text"></i> <span data-i18n="finalize.summary.title">Your Journey Summary</span></h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; color: #fff; font-size: 0.95rem;">
                 <div>
-                    <strong style="color: #ccc;">Dates:</strong> <span id="summary-dates">-</span><br><br>
-                    <strong style="color: #ccc;">Travelers:</strong> <span id="summary-travelers">-</span><br><br>
-                    <strong style="color: #ccc;">Budget:</strong> <span id="summary-budget">-</span><br><br>
-                    <strong style="color: #ccc;">Hotel:</strong> <span id="summary-hotel">-</span><br><br>
-                    <strong style="color: #ccc;">Est. Hotel Cost:</strong> <span id="summary-hotel-cost">-</span>
+                    <strong style="color: #ccc;" data-i18n="finalize.summary.dates">Dates:</strong> <span id="summary-dates">-</span><br><br>
+                    <strong style="color: #ccc;" data-i18n="finalize.summary.travelers">Travelers:</strong> <span id="summary-travelers">-</span><br><br>
+                    <strong style="color: #ccc;" data-i18n="finalize.summary.budget">Budget:</strong> <span id="summary-budget">-</span><br><br>
+                    <strong style="color: #ccc;" data-i18n="finalize.summary.hotel">Hotel:</strong> <span id="summary-hotel">-</span><br><br>
+                    <strong style="color: #ccc;" data-i18n="finalize.summary.hotel_cost">Est. Hotel Cost:</strong> <span id="summary-hotel-cost">-</span>
                 </div>
                 <div>
-                    <strong style="color: #ccc;">Destinations:</strong>
+                    <strong style="color: #ccc;" data-i18n="finalize.summary.destinations">Destinations:</strong>
                     <ul id="summary-destinations" style="list-style: none; padding-left: 0; margin-top: 0.5rem; line-height: 1.6;">
                     </ul>
                 </div>
@@ -153,11 +153,11 @@
         <div class="ticket-body">
             <!-- Trip Summary -->
             <div class="ticket-summary">
-                <div class="ticket-row"><i class="ph ph-calendar"></i> <span id="ticket-dates">Select dates</span></div>
+                <div class="ticket-row"><i class="ph ph-calendar"></i> <span id="ticket-dates" data-i18n="finalize.ticket.select_dates">Select dates</span></div>
                 <div class="ticket-row"><i class="ph ph-users"></i> <span id="ticket-guests">2 Adults</span></div>
-                <div class="ticket-row"><i class="ph ph-wallet"></i> <span id="ticket-budget">Standard</span></div>
-                <div class="ticket-row"><i class="ph ph-bed"></i> <span id="ticket-hotel">No hotel selected</span></div>
-                <div class="ticket-row"><i class="ph ph-map-pin"></i> <span id="ticket-places">Loading...</span></div>
+                <div class="ticket-row"><i class="ph ph-wallet"></i> <span id="ticket-budget" data-i18n="finalize.ticket.default_budget">Standard</span></div>
+                <div class="ticket-row"><i class="ph ph-bed"></i> <span id="ticket-hotel" data-i18n="finalize.ticket.no_hotel">No hotel selected</span></div>
+                <div class="ticket-row"><i class="ph ph-map-pin"></i> <span id="ticket-places" data-i18n="finalize.ticket.loading_places">Loading...</span></div>
             </div>
 
             <!-- Chat Interface -->
@@ -178,15 +178,15 @@
         
         <div class="ticket-footer" style="flex-direction: column; gap: 0.5rem; align-items: stretch;">
             <button id="ticket-generate-btn" class="gold-btn-solid" style="display:none;">
-                <i class="ph-fill ph-magic-wand"></i> Generate Journey
+                <i class="ph-fill ph-magic-wand"></i> <span data-i18n="finalize.ticket.generate_journey_btn">Generate Journey</span>
             </button>
             
             <div id="regeneration-controls" style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
-                <button id="regen-change-hotel" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-bed"></i> Change Hotel</button>
-                <button id="regen-change-budget" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-wallet"></i> Change Budget</button>
-                <button id="regen-add-dest" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-plus"></i> Add Dest</button>
-                <button id="regen-remove-dest" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-minus"></i> Remove Dest</button>
-                <button id="regen-re-generate" style="background: var(--gold); border: none; color: #000; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem;"><i class="ph-fill ph-magic-wand"></i> Regenerate Itinerary</button>
+                <button id="regen-change-hotel" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-bed"></i> <span data-i18n="finalize.regen.change_hotel">Change Hotel</span></button>
+                <button id="regen-change-budget" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-wallet"></i> <span data-i18n="finalize.regen.change_budget">Change Budget</span></button>
+                <button id="regen-add-dest" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-plus"></i> <span data-i18n="finalize.regen.add_dest">Add Dest</span></button>
+                <button id="regen-remove-dest" style="background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="ph ph-minus"></i> <span data-i18n="finalize.regen.remove_dest">Remove Dest</span></button>
+                <button id="regen-re-generate" style="background: var(--gold); border: none; color: #000; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem;"><i class="ph-fill ph-magic-wand"></i> <span data-i18n="finalize.regen.regenerate">Regenerate Itinerary</span></button>
             </div>
         </div>
 
@@ -196,12 +196,12 @@
     <!-- BUDGET WARNING MODAL -->
     <div id="budget-warning-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
         <div style="background: #1a1a1a; padding: 2rem; border-radius: 8px; border: 1px solid red; max-width: 400px; text-align: center;">
-            <h3 style="color: red; margin-top: 0;"><i class="ph-fill ph-warning-circle" style="font-size: 2rem;"></i><br>Budget Exceeded</h3>
+            <h3 style="color: red; margin-top: 0;"><i class="ph-fill ph-warning-circle" style="font-size: 2rem;"></i><br><span data-i18n="finalize.modal.budget_exceeded">Budget Exceeded</span></h3>
             <p id="budget-warning-text" style="color: #ccc; margin-bottom: 1.5rem;"></p>
             <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                <button id="btn-continue-anyway" class="gold-btn-solid" style="background: #333; color: #fff; border: 1px solid #555;">Continue Anyway</button>
-                <button id="btn-change-hotel" class="gold-btn-solid" style="background: var(--gold); color: #000;">Change Hotel</button>
-                <button id="btn-adjust-budget" class="gold-btn-solid" style="background: #27ae60; color: #fff;">Adjust Budget</button>
+                <button id="btn-continue-anyway" class="gold-btn-solid" style="background: #333; color: #fff; border: 1px solid #555;" data-i18n="finalize.modal.continue_anyway">Continue Anyway</button>
+                <button id="btn-change-hotel" class="gold-btn-solid" style="background: var(--gold); color: #000;" data-i18n="finalize.modal.change_hotel">Change Hotel</button>
+                <button id="btn-adjust-budget" class="gold-btn-solid" style="background: #27ae60; color: #fff;" data-i18n="finalize.modal.adjust_budget">Adjust Budget</button>
             </div>
         </div>
     </div>

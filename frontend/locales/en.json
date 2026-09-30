@@ -35,7 +35,24 @@
     },
     "stories": {
       "title": "Stories of<br>Jordan",
-      "read_full_story": "Read Full Story →"
+      "read_full_story": "Read Full Story →",
+      "cards": {
+        "petra": {
+          "title": "The city carved into<br>stone.",
+          "p1": "Petra was shaped by the Nabataeans, who carved temples, tombs, and pathways directly into rose-red sandstone. Entering through the Siq reveals a city where craft, trade, and memory remain embedded in the land.",
+          "p2": "Beyond its monuments, Petra carries the stories of people who crossed the desert and made this place a meeting point of cultures. Its enduring silence is part of its power."
+        },
+        "umm_qais": {
+          "title": "Where ancient empires<br>meet the horizon.",
+          "p1": "Perched on a hilltop in northern Jordan, Umm Qais (ancient Gadara) offers breathtaking panoramic views of the Sea of Galilee, the Yarmouk River gorge, and the Golan Heights.",
+          "p2": "Once a cultural hub of the Decapolis, its stunning black basalt ruins whisper tales of poets, philosophers, and a rich Greco-Roman heritage that stood the test of time."
+        },
+        "roman_theater": {
+          "title": "The beating heart of<br>ancient Philadelphia.",
+          "p1": "Built in the 2nd century AD, the magnificent Roman Theater of Amman was cut directly into the northern side of a hill, designed to hold up to 6,000 spectators in perfect acoustic harmony.",
+          "p2": "Today, it stands as a striking contrast amidst the bustling modern capital, echoing the vibrant civic life, arts, and grand spectacles of the ancient Roman Empire."
+        }
+      }
     },
     "culture": {
       "title": "A culture that lives in the details.",
@@ -54,7 +71,33 @@
       "loading_forecast": "Loading live forecast...",
       "across_jordan": "ACROSS JORDAN",
       "current_conditions": "Current Conditions",
-      "loading_current": "Loading live data..."
+      "loading_current": "Loading live data...",
+      "days": {
+        "Today": "Today",
+        "Sunday": "Sunday",
+        "Monday": "Monday",
+        "Tuesday": "Tuesday",
+        "Wednesday": "Wednesday",
+        "Thursday": "Thursday",
+        "Friday": "Friday",
+        "Saturday": "Saturday"
+      },
+      "conditions": {
+        "Clear": "Clear",
+        "Sunny": "Sunny",
+        "Cloudy": "Cloudy",
+        "Fog": "Fog",
+        "Rain": "Rain",
+        "Snow": "Snow",
+        "Showers": "Showers",
+        "Storm": "Storm"
+      },
+      "cities": {
+        "Amman": "Amman",
+        "Petra": "Petra",
+        "Aqaba": "Aqaba",
+        "Wadi Rum": "Wadi Rum"
+      }
     },
     "toolkit": {
       "supertitle": "CURATED ESSENTIALS - JORDAN",
@@ -223,6 +266,21 @@
       "sender_title": "AI Travel Concierge",
       "welcome_message": "Ready to generate your custom itinerary? Click the button below, or tell me any specific requirements first!",
       "feedback_placeholder": "E.g., I want a relaxed pace, focus on history..."
+    },
+    "summary": {
+      "title": "Your Journey Summary",
+      "dates": "Dates:",
+      "travelers": "Travelers:",
+      "budget": "Budget:",
+      "hotel": "Hotel:",
+      "hotel_cost": "Est. Hotel Cost:",
+      "destinations": "Destinations:"
+    },
+    "modal": {
+      "budget_exceeded": "Budget Exceeded",
+      "continue_anyway": "Continue Anyway",
+      "change_hotel": "Change Hotel",
+      "adjust_budget": "Adjust Budget"
     }
   },
   "gallery": {
