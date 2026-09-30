@@ -574,7 +574,7 @@ function walkTextNodes(node, dictionary) {
             const destNames = myJourney.map(d => d.name);
 
             try {
-                const response = await fetch('http://127.0.0.1:8000/api/generate-journey', {
+                const response = await fetch('https://shmagh.onrender.com/api/generate-journey', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

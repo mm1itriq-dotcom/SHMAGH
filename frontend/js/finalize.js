@@ -395,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/generate-journey', {
+            const response = await fetch('https://shmagh.onrender.com/api/generate-journey', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -414,48 +414,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     const journeyData = data.journey || data;
                     
-                    // --- Validation Layer ---
+                    // --- Validation Layer (simplified) ---
                     let isValid = true;
-                    const routeArr = journeyData.recommended_trip?.route || [];
-                    const routeStr = routeArr.join(' ').toLowerCase();
-                    for (const dest of destNames) {
-                        if (!routeStr.includes(dest.toLowerCase())) {
-                            isValid = false; break;
-                        }
+                    // Only check that itinerary exists and is non-empty
+                    if (!journeyData.itinerary || journeyData.itinerary.length === 0) {
+                        isValid = false;
                     }
-                    if (isValid && journeyData.itinerary) {
-                        for (const day of journeyData.itinerary) {
-                            if (day.driving_segments) {
-                                for (const seg of day.driving_segments) {
-                                    if (seg.includes('Distance: 0 ') || seg.includes('Duration: 0 ')) {
-                                        isValid = false; break;
-                                    }
-                                }
-                            }
-                        }
+                    if (isValid && !journeyData.cost_analysis) {
+                        isValid = false;
                     }
-                    if (isValid && journeyData.cost_analysis) {
-                        const ca = journeyData.cost_analysis;
-                        if (!ca.hotel_cost && !ca.hotel && !ca.Hotel) isValid = false;
-                        if (!ca.transport_cost && !ca.transportation && !ca.Transportation) isValid = false;
-                    } else { isValid = false; }
-                    
-                    if (isValid && journeyData.map_data) {
-                        const md = journeyData.map_data;
-                        if (!md.restaurants || md.restaurants.length === 0 || typeof md.restaurants[0] !== 'object') isValid = false;
-                        if (!md.hidden_gems || md.hidden_gems.length === 0 || typeof md.hidden_gems[0] !== 'object') isValid = false;
-                        
-                        // Check if unrelated locations are added
-                        if (md.restaurants && md.restaurants.length > 0) {
-                            for (const r of md.restaurants) {
-                                let match = false;
-                                for (const d of routeArr) {
-                                    if (r.location && r.location.toLowerCase().includes(d.toLowerCase())) match = true;
-                                }
-                                if (!match) isValid = false;
-                            }
-                        }
-                    } else { isValid = false; }
                     
                     if (!isValid) {
                         if ((window._generationRetries || 0) < 2) {

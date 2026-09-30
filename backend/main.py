@@ -39,7 +39,7 @@ def generate_journey(request: UserRequirements):
         return {"error": "Gemini API Key is missing."}
     
     req_data = request.dict()
-    model = genai.GenerativeModel('gemini-3.8-flash')
+    model = genai.GenerativeModel('gemini-2.0-flash')
     
     # --- MODIFICATION LAYER ---
     if req_data.get("feedback"):

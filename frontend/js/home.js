@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     // Fetch from backend API
-    fetch('http://localhost:8000/api/stories')
+    fetch('https://shmagh.onrender.com/api/stories')
         .then(response => response.json())
         .then(data => {
             if (data.stories && data.stories.length >= 3) {
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const lats = CITIES.map(c => c.lat).join(',');
             const lons = CITIES.map(c => c.lon).join(',');
             
-            const response = await fetch('http://localhost:8000/api/weather?lats=' + lats + '&lons=' + lons);
+            const response = await fetch('https://shmagh.onrender.com/api/weather?lats=' + lats + '&lons=' + lons);
             if (!response.ok) throw new Error("Weather API failed");
             
             const data = await response.json();
