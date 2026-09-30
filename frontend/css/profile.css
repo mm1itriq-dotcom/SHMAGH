@@ -435,3 +435,27 @@ body.rtl-active .input-group {
     flex-direction: column;
     padding: 1rem;
 }
+
+
+/* ==========================================
+   RESPONSIVE DESIGN (Added)
+========================================== */
+@media (max-width: 768px) {
+    .cards-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .profile-tabs {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .profile-name {
+        font-size: 2rem;
+    }
+    .profile-container {
+        padding: 0 1rem;
+    }
+    .profile-card {
+        padding: 1.5rem;
+    }
+}
+

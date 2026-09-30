@@ -633,3 +633,58 @@ input[type=number] {
     color: #ff4d4d;
     font-size: 1.25rem;
 }
+
+
+/* ==========================================
+   RESPONSIVE DESIGN (Added)
+========================================== */
+@media (max-width: 1024px) {
+    .split-layout {
+        flex-direction: column;
+        justify-content: center;
+        gap: 2rem;
+        height: auto;
+        min-height: 100vh;
+        padding: 6rem 2rem 4rem 2rem;
+    }
+    
+    .left-content, .right-content {
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    body, html {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+    
+    .page-wrapper {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .main-heading {
+        font-size: 3rem;
+    }
+    
+    .navbar {
+        padding: 1.5rem 2rem;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .glass-panel {
+        padding: 2rem 1.5rem;
+    }
+    .main-heading {
+        font-size: 2.2rem;
+    }
+}
+
+/* Global Text Wrap */
+body {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}

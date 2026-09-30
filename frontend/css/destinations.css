@@ -469,3 +469,67 @@
     gap: 0.5rem;
     font-weight: 600;
 }
+
+
+/* ==========================================
+   RESPONSIVE DESIGN (Added)
+========================================== */
+@media (max-width: 1024px) {
+    .dest-navbar {
+        padding: 1.5rem 2rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .dest-navbar .nav-links {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .dest-header {
+        padding: 2rem 1.5rem;
+    }
+    .dest-header h1 {
+        font-size: 3rem;
+    }
+
+    .dest-toolbar {
+        margin: 0 2rem 2rem;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+    .search-box {
+        width: 100%;
+    }
+    .filter-pills {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .your-journey-btn {
+        justify-content: center;
+    }
+
+    .dest-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 2rem 4rem;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .dest-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dest-card {
+        height: 450px;
+    }
+    
+    .journey-sidebar {
+        width: 100%;
+        right: -100%;
+    }
+}
+

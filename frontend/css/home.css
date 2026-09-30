@@ -1691,3 +1691,153 @@ html[dir="rtl"] .story-text-content h2 {
 html[dir="rtl"] .roman-image-caption {
     text-align: left; /* Flips the Arabic text in screenshot */
 }
+
+
+/* ==========================================
+   RESPONSIVE DESIGN (Added)
+========================================== */
+@media (max-width: 1024px) {
+    /* Navbar */
+    .home-navbar {
+        padding: 1.5rem 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: space-between;
+    }
+    
+    .nav-center {
+        display: none; /* Hide on mobile/tablet to avoid overflow */
+    }
+
+    /* Hero */
+    .hero-section {
+        min-height: 100vh;
+    }
+    .center-heading {
+        font-size: 3.5rem;
+    }
+    .center-description {
+        font-size: 1rem;
+        padding: 0 1.5rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        width: 80%;
+    }
+    .gold-btn-solid, .outline-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Explore */
+    .explore-section {
+        padding: 4rem 2rem;
+    }
+    .section-heading {
+        font-size: 3rem;
+    }
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Stories */
+    .stories-section {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+    .stories-sidebar {
+        width: 100%;
+        height: auto;
+        padding: 3rem 2rem;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .stories-content {
+        padding: 3rem 2rem;
+        justify-content: center;
+    }
+    .story-glass-card {
+        padding: 2.5rem;
+    }
+    .story-title {
+        font-size: 2.5rem;
+    }
+
+    /* Culture */
+    .culture-section {
+        height: auto;
+        min-height: 100vh;
+    }
+    .culture-panels {
+        flex-direction: column;
+        height: auto;
+    }
+    .culture-card {
+        height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .culture-card:hover {
+        flex: 1; /* Disable accordion flex on mobile */
+    }
+    .culture-header h2 {
+        font-size: 2.5rem;
+    }
+
+    /* Toolkit */
+    .toolkit-section {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+    .toolkit-content {
+        padding: 4rem 2rem;
+        width: 100%;
+    }
+    .toolkit-phone-container {
+        padding: 4rem 2rem;
+        width: 100%;
+    }
+    
+    /* Weather */
+    .weather-section {
+        height: auto;
+        min-height: 100vh;
+    }
+    .weather-container {
+        flex-direction: column;
+        margin: 2rem;
+        padding: 2rem;
+    }
+    .weather-forecast, .weather-current {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Journal */
+    .journal-section {
+        padding: 4rem 2rem;
+    }
+    .journal-masonry {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 600px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .journal-masonry {
+        column-count: 1;
+    }
+    
+    .center-heading {
+        font-size: 2.5rem;
+    }
+}
+
