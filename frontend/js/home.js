@@ -133,13 +133,14 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const lats = CITIES.map(c => c.lat).join(',');
             const lons = CITIES.map(c => c.lon).join(',');
-            
-            const response = await fetch('https://shmagh.onrender.com/api/weather?lats=' + lats + '&lons=' + lons);
-            if (!response.ok) throw new Error("Weather API failed");
-            
-            const data = await response.json();
-            const forecastData = data.forecast;
-            const currentData = data.current;
+
+            // Call open-meteo directly from browser (faster, no cold-start, no rate limits)
+            const forecastUrl = 'https://api.open-meteo.com/v1/forecast?latitude=31.9522&longitude=35.9331&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto';
+            const currentUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + lats + '&longitude=' + lons + '&current_weather=true';
+            const [forecastResp, currentResp] = await Promise.all([fetch(forecastUrl), fetch(currentUrl)]);
+            if (!forecastResp.ok || !currentResp.ok) throw new Error('Weather API failed');
+            const forecastData = await forecastResp.json();
+            const currentData = await currentResp.json();
             
             const forecastList = document.getElementById('forecast-list');
             forecastList.innerHTML = '';
