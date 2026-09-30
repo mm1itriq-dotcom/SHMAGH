@@ -395,14 +395,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            // Show wakeup message - free server may take up to 50s to wake
+            chatArea.innerHTML += `<div class="chat-message ai-message" id="wakeup-msg"><em style="color:#aaa;">⏳ Waking up AI server... please wait up to 60 seconds on first use.</em></div>`;
+            
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 120000); // 120s timeout
+            
             const response = await fetch('https://shmagh.onrender.com/api/generate-journey', {
                 method: 'POST',
+                signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(payload)
             });
+            clearTimeout(timeoutId);
+            
+            // Remove wakeup message
+            const wakeupMsg = document.getElementById('wakeup-msg');
+            if (wakeupMsg) wakeupMsg.remove();
+            
             const data = await response.json();
             
             overlay.style.display = 'none';
