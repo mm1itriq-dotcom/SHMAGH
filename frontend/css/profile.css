@@ -29,7 +29,7 @@
     margin: -100px auto 100px; /* overlap hero */
     position: relative;
     z-index: 10;
-    padding: 0 2rem;
+    padding: 0 var(--section-px);
 }
 
 .profile-header {

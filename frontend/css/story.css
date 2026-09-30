@@ -17,7 +17,7 @@ body.story-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem 4rem;
+    padding: 1.5rem var(--section-px);
     z-index: 1000;
     background: transparent;
 }
@@ -116,7 +116,7 @@ body.story-page {
 .hero-content {
     position: relative;
     z-index: 2;
-    padding: 0 10%;
+    padding: 0 var(--section-px);
 }
 
 .hero-content h1 {
@@ -138,7 +138,7 @@ body.story-page {
 
 /* CONTENT BLOCKS */
 .story-content {
-    padding: 4rem 10%;
+    padding: 4rem var(--section-px);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4rem;

@@ -38,7 +38,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 2rem 4rem;
+    padding: 1.5rem var(--section-px);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -49,7 +49,7 @@
 .home-navbar.scrolled-up {
     background: rgba(5, 5, 5, 0.95);
     backdrop-filter: blur(10px);
-    padding: 1.25rem 4rem; /* slightly thinner when sticky */
+    padding: 1rem var(--section-px); /* slightly thinner when sticky */
     box-shadow: 0 4px 30px rgba(0,0,0,0.5);
 }
 
@@ -211,7 +211,7 @@
    EXPLORE JORDAN SECTION
 ========================================== */
 .explore-section {
-    padding: 6rem 4rem;
+    padding: var(--section-py) var(--section-px);
     background-color: #000; /* Ensure it matches the dark void */
     min-height: 100vh;
 }
@@ -402,7 +402,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end; /* Push card to the right */
-    padding: 0 6rem;
+    padding: 0 var(--section-px);
 }
 
 .story-glass-card {
@@ -723,7 +723,7 @@
    TRAVELER'S TOOLKIT SECTION
 ========================================== */
 .toolkit-section {
-    padding: 8rem 6rem;
+    padding: var(--section-py) var(--section-px);
     background-color: #030303; /* Slightly off-black */
 }
 
@@ -854,7 +854,7 @@
    COMMUNITY PHOTO JOURNAL SECTION
 ========================================== */
 .journal-section {
-    padding: 8rem 6rem;
+    padding: var(--section-py) var(--section-px);
     background-color: #0c0c0c; /* A deep, rich black/gray */
     display: flex;
     flex-direction: column;
@@ -966,7 +966,7 @@
 ========================================== */
 .site-footer {
     background-color: #030303;
-    padding: 6rem 6rem 2rem 6rem;
+    padding: var(--section-py) var(--section-px) 2rem var(--section-px);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     color: #d1d1d1;
 }
@@ -1267,7 +1267,7 @@ input:checked + .slider:before {
 }
 
 .gallery-modal-content {
-    padding: 4rem 6rem;
+    padding: var(--section-py) var(--section-px);
     max-width: 1400px;
     margin: 0 auto;
     position: relative;
@@ -1527,7 +1527,7 @@ html[dir="rtl"] .close-gallery {
 
 .story-modal-content {
     display: flex;
-    padding: 4rem 8rem;
+    padding: 4rem var(--section-px);
     gap: 4rem;
     max-width: 1400px;
     margin: 0 auto;

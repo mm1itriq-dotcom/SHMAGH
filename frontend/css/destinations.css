@@ -14,7 +14,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 4rem;
+    padding: 1.5rem var(--section-px);
     box-sizing: border-box;
 }
 
@@ -86,7 +86,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 2rem;
-    margin: 0 6rem 3rem;
+    margin: 0 var(--section-px) 3rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
 }
@@ -192,7 +192,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 3rem;
-    padding: 0 6rem 6rem;
+    padding: 0 var(--section-px) 6rem;
 }
 
 .dest-card {
