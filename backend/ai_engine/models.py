@@ -1,6 +1,5 @@
-
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 
 class DatesConfig(BaseModel):
@@ -21,6 +20,7 @@ class UserRequirements(BaseModel):
     currency: str = "JOD"
     travel_style: List[str] = []
     transportation_method: str = "car"
+    feedback: Optional[str] = None
 
 class DailyCostBreakdown(BaseModel):
     hotel: str

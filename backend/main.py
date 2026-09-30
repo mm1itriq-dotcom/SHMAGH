@@ -31,21 +31,112 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+import json
+
 @app.post("/api/generate-journey")
 def generate_journey(request: UserRequirements):
     if not GEMINI_API_KEY:
         return {"error": "Gemini API Key is missing."}
     
     req_data = request.dict()
+    model = genai.GenerativeModel('gemini-3.8-flash')
+    
+    # --- MODIFICATION LAYER ---
+    if req_data.get("feedback"):
+        try:
+            feedback = req_data["feedback"]
+            prompt = f"""Convert this travel feedback into a structured JSON preference object.
+Feedback: "{feedback}"
+Example Output:
+{{
+  "pace": "relaxed",
+  "driving_preference": "minimize_driving",
+  "exploration_time": "extended",
+  "food_preference": "local_jordanian",
+  "interest_priority": "historical"
+}}
+Return ONLY valid JSON without markdown blocks."""
+            resp = model.generate_content(prompt)
+            prefs_text = resp.text.replace('```json', '').replace('```', '').strip()
+            prefs = json.loads(prefs_text)
+            
+            # 1. Merge preferences with existing trip data.
+            # 2. Modify `req_data` to apply changes.
+            if prefs.get("pace") == "relaxed" or prefs.get("exploration_time") == "extended":
+                if len(req_data["destinations"]) > 2:
+                    # Keep fewer destinations to slow down pace and allow more exploration
+                    req_data["destinations"] = req_data["destinations"][:max(1, len(req_data["destinations"])-1)]
+            if prefs.get("driving_preference") == "minimize_driving":
+                if len(req_data["destinations"]) > 2:
+                    req_data["destinations"] = req_data["destinations"][:2]
+            
+            if "travel_style" not in req_data:
+                req_data["travel_style"] = []
+            req_data["travel_style"].append(json.dumps(prefs))
+        except Exception as e:
+            print("Feedback extraction failed:", e)
+
+    # --- GENERATION ---
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
         plan = generate_travel_plan(req_data, model)
-        return {"journey": plan}
     except Exception as e:
         print("Error inside generation:", e)
-        # Trigger the fallback
         plan = generate_travel_plan(req_data, None)
+
+    if "error" in plan or not plan:
         return {"journey": plan}
+
+    # --- ENRICHMENT LAYER (Restaurants & Hidden Gems) ---
+    try:
+        destinations = req_data.get("destinations", [])
+        if not destinations:
+            destinations = ["Amman"]
+            
+        enrich_prompt = f"""You are an expert Jordanian local guide.
+For these destinations: {', '.join(destinations)}, suggest 1-2 Recommended Restaurants and 1-2 Hidden Gems for EACH.
+Recommendations MUST match these exact locations. Do not suggest random restaurants from unrelated cities.
+Use AI knowledge to suggest well-known local Jordanian restaurants or food experiences related to that specific area.
+Return ONLY valid JSON matching this schema exactly without markdown blocks:
+{{
+  "restaurants": [
+    {{
+      "name": "Restaurant Name",
+      "location": "Destination name",
+      "rating": "4.5/5",
+      "price_level": "$$",
+      "cuisine_type": "Jordanian",
+      "recommended_dish": "Mansaf",
+      "reason": "Why it matches"
+    }}
+  ],
+  "hidden_gems": [
+    {{
+      "name": "Gem Name",
+      "location": "Destination name",
+      "description": "Short description",
+      "best_time": "Morning",
+      "why_visit": "Why it's a hidden gem"
+    }}
+  ]
+}}
+"""
+        enrich_resp = model.generate_content(enrich_prompt)
+        enrich_data = json.loads(enrich_resp.text.replace('```json', '').replace('```', '').strip())
+        
+        # Ensure they are not empty
+        if not enrich_data.get("restaurants"):
+            enrich_data["restaurants"] = [{"name": "Local Favorite", "location": destinations[0], "cuisine_type": "Jordanian", "reason": "Authentic taste"}]
+        if not enrich_data.get("hidden_gems"):
+            enrich_data["hidden_gems"] = [{"name": "Secret Spot", "location": destinations[0], "description": "Beautiful view", "why_visit": "Unique local spot", "best_time": "Sunset"}]
+            
+        if "map_data" not in plan:
+            plan["map_data"] = {}
+        plan["map_data"]["restaurants"] = enrich_data["restaurants"]
+        plan["map_data"]["hidden_gems"] = enrich_data["hidden_gems"]
+    except Exception as e:
+        print("Enrichment failed:", e)
+
+    return {"journey": plan}
 
 _api_cache = {}
 def get_cached(key, ttl):

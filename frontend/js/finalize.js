@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function startGeneration() {
+    async function startGeneration(feedbackText = null) {
         const s = updateSummary();
         const destNames = myJourney.map(d => d.name_en || d.name);
         
@@ -389,6 +389,10 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             destinations: destNames
         };
+        
+        if (feedbackText) {
+            payload.feedback = feedbackText;
+        }
 
         try {
             const response = await fetch('http://127.0.0.1:8000/api/generate-journey', {
@@ -408,7 +412,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.error || (data.journey && data.journey.error)) {
                     chatArea.innerHTML += `<div class="chat-message ai-message"><strong style="color:red;">API Error</strong><p>${data.error || data.journey.error}</p></div>`;
                 } else {
-                    renderJourneyToChat(data.journey || data);
+                    const journeyData = data.journey || data;
+                    
+                    // --- Validation Layer ---
+                    let isValid = true;
+                    const routeArr = journeyData.recommended_trip?.route || [];
+                    const routeStr = routeArr.join(' ').toLowerCase();
+                    for (const dest of destNames) {
+                        if (!routeStr.includes(dest.toLowerCase())) {
+                            isValid = false; break;
+                        }
+                    }
+                    if (isValid && journeyData.itinerary) {
+                        for (const day of journeyData.itinerary) {
+                            if (day.driving_segments) {
+                                for (const seg of day.driving_segments) {
+                                    if (seg.includes('Distance: 0 ') || seg.includes('Duration: 0 ')) {
+                                        isValid = false; break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (isValid && journeyData.cost_analysis) {
+                        const ca = journeyData.cost_analysis;
+                        if (!ca.hotel_cost && !ca.hotel && !ca.Hotel) isValid = false;
+                        if (!ca.transport_cost && !ca.transportation && !ca.Transportation) isValid = false;
+                    } else { isValid = false; }
+                    
+                    if (isValid && journeyData.map_data) {
+                        const md = journeyData.map_data;
+                        if (!md.restaurants || md.restaurants.length === 0 || typeof md.restaurants[0] !== 'object') isValid = false;
+                        if (!md.hidden_gems || md.hidden_gems.length === 0 || typeof md.hidden_gems[0] !== 'object') isValid = false;
+                        
+                        // Check if unrelated locations are added
+                        if (md.restaurants && md.restaurants.length > 0) {
+                            for (const r of md.restaurants) {
+                                let match = false;
+                                for (const d of routeArr) {
+                                    if (r.location && r.location.toLowerCase().includes(d.toLowerCase())) match = true;
+                                }
+                                if (!match) isValid = false;
+                            }
+                        }
+                    } else { isValid = false; }
+                    
+                    if (!isValid) {
+                        if ((window._generationRetries || 0) < 2) {
+                            window._generationRetries = (window._generationRetries || 0) + 1;
+                            console.warn("Validation failed. Regenerating... Attempt: " + window._generationRetries);
+                            startGeneration();
+                            return;
+                        } else {
+                            chatArea.innerHTML += `<div class="chat-message ai-message"><strong style="color:red;">Validation Error</strong><p>Missing API data or invalid route segments after multiple attempts.</p></div>`;
+                            window._generationRetries = 0;
+                            return;
+                        }
+                    }
+                    window._generationRetries = 0;
+                    // --- End Validation ---
+                    
+                    renderJourneyToChat(journeyData);
                 }
             } else {
                 chatArea.innerHTML += `<div class="chat-message ai-message"><strong style="color:red;">Error</strong><p>${JSON.stringify(data)}</p></div>`;
@@ -468,17 +532,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (journeyData.cost_analysis) {
+            const ca = journeyData.cost_analysis;
+            const hCost = ca.hotel_cost || ca.hotel || ca.Hotel || '-';
+            const tCost = ca.transport_cost || ca.transportation || ca.Transportation || '-';
+            const fCost = ca.food_cost || ca.food || ca.Food || '-';
+            const aCost = ca.activity_cost || ca.activities || ca.Activities || '-';
+            const totCost = ca.total_cost || ca.total || ca.Total || '-';
+            
             html += '<details class="budget-details">';
-            html += `<summary><i class="ph-fill ph-wallet"></i> Budget Summary &nbsp; <span style="color: #fff; font-weight: normal;">${journeyData.cost_analysis.total_cost}</span></summary>`;
+            html += `<summary><i class="ph-fill ph-wallet"></i> Budget Summary &nbsp; <span style="color: #fff; font-weight: normal;">${totCost}</span></summary>`;
             html += '<div class="budget-content">';
             html += '<ul style="list-style: none; padding: 0; margin: 0;">';
-            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Transportation:</span> <span>${journeyData.cost_analysis.transport_cost}</span></li>`;
-            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Hotel:</span> <span>${journeyData.cost_analysis.hotel_cost}</span></li>`;
-            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Food:</span> <span>${journeyData.cost_analysis.food_cost}</span></li>`;
-            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Activities:</span> <span>${journeyData.cost_analysis.activity_cost}</span></li>`;
-            html += `<li style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; font-weight: bold; color: #fff;"><span>Total:</span> <span>${journeyData.cost_analysis.total_cost}</span></li>`;
+            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Hotel:</span> <span>${hCost}</span></li>`;
+            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Transportation:</span> <span>${tCost}</span></li>`;
+            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Food:</span> <span>${fCost}</span></li>`;
+            html += `<li style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;"><span>Activities:</span> <span>${aCost}</span></li>`;
+            html += `<li style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; font-weight: bold; color: #fff;"><span>Total:</span> <span>${totCost}</span></li>`;
             html += '</ul></div></details>';
         }
+
+        // --- Recommended Restaurants ---
+        html += '<div class="itinerary-card" style="margin-top: 1.5rem;">';
+        html += '<h4><i class="ph-fill ph-fork-knife"></i> Recommended Restaurants</h4>';
+        if (journeyData.map_data && journeyData.map_data.restaurants && journeyData.map_data.restaurants.length > 0 && typeof journeyData.map_data.restaurants[0] === 'object') {
+            journeyData.map_data.restaurants.forEach(r => {
+                html += `<div style="margin-bottom: 0.8rem;">
+                    <strong>${r.name || 'Unknown'}</strong><br>
+                    <span style="color:#aaa;">Location: ${r.location || 'Unknown'}</span><br>
+                    <span style="color:var(--gold);">Rating: ${r.rating || 'N/A'}</span> | <span>Price: ${r.price_level || r.price_range || 'N/A'}</span><br>
+                    <span style="color:#ccc;">Cuisine: ${r.cuisine_type || 'N/A'}</span><br>
+                    <span style="color:#eee;">Recommended dish: ${r.recommended_dish || 'N/A'}</span><br>
+                    <em style="font-size:0.9rem; color:#aaa;">Why visit: ${r.reason || r.why_visit || 'N/A'}</em>
+                </div>`;
+            });
+        } else {
+            html += '<p>No restaurant recommendations available</p>';
+        }
+        html += '</div>';
+
+        // --- Hidden Gems ---
+        html += '<div class="itinerary-card">';
+        html += '<h4><i class="ph-fill ph-diamond"></i> Hidden Gems</h4>';
+        if (journeyData.map_data && journeyData.map_data.hidden_gems && journeyData.map_data.hidden_gems.length > 0 && typeof journeyData.map_data.hidden_gems[0] === 'object') {
+            journeyData.map_data.hidden_gems.forEach(g => {
+                html += `<div style="margin-bottom: 0.8rem;">
+                    <strong>${g.name || 'Unknown'}</strong><br>
+                    <span style="color:#aaa;">Location: ${g.location || 'Unknown'}</span><br>
+                    <em style="font-size:0.9rem; color:#ccc;">${g.description || ''}</em><br>
+                    <span style="font-size:0.9rem; color:#eee;">Why visit: ${g.why_visit || 'N/A'}</span><br>
+                    <span style="font-size:0.9rem; color:var(--gold);">Best time: ${g.best_time || 'N/A'}</span>
+                </div>`;
+            });
+        } else {
+            html += '<p>No hidden gems available</p>';
+        }
+        html += '</div>';
 
         // Action Buttons inside the chat
         html += '<div class="ai-actions-row">';
@@ -573,5 +681,45 @@ document.addEventListener('DOMContentLoaded', () => {
         ticketPanel.classList.remove('active');
         startGeneration();
     });
+
+    // Chatbot send functionality
+    const chatSendBtn = document.getElementById('chat-send-btn');
+    const handleFeedbackSend = () => {
+        const text = feedbackInput.value.trim();
+        if (!text) return;
+        
+        // Render user message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'chat-message user-message';
+        userMsg.innerHTML = `<p>${text}</p>`;
+        chatArea.appendChild(userMsg);
+        
+        // Clear input
+        feedbackInput.value = '';
+        
+        // Render AI regenerating message
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'chat-message ai-message';
+        aiMsg.innerHTML = `<p>Regenerating based on your feedback...</p>`;
+        chatArea.appendChild(aiMsg);
+        
+        // Scroll to bottom
+        chatArea.scrollTop = chatArea.scrollHeight;
+        
+        // Trigger regeneration
+        startGeneration(text);
+    };
+
+    if (chatSendBtn) {
+        chatSendBtn.addEventListener('click', handleFeedbackSend);
+    }
+    if (feedbackInput) {
+        feedbackInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleFeedbackSend();
+            }
+        });
+    }
 });
 
