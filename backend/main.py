@@ -94,7 +94,6 @@ Return ONLY valid JSON without markdown blocks."""
             
         enrich_prompt = f"""You are an expert Jordanian local guide.
 For these destinations: {', '.join(destinations)}, suggest 1-2 Recommended Restaurants and 1-2 Hidden Gems for EACH.
-Recommendations MUST match these exact locations. Do not suggest random restaurants from unrelated cities.
 Use AI knowledge to suggest well-known local Jordanian restaurants or food experiences related to that specific area.
 Return ONLY valid JSON matching this schema exactly without markdown blocks:
 {{
@@ -121,20 +120,32 @@ Return ONLY valid JSON matching this schema exactly without markdown blocks:
 }}
 """
         enrich_resp = model.generate_content(enrich_prompt)
-        enrich_data = json.loads(enrich_resp.text.replace('```json', '').replace('```', '').strip())
+        enrich_text = enrich_resp.text.replace('```json', '').replace('```', '').strip()
+        enrich_data = json.loads(enrich_text)
         
-        # Ensure they are not empty
-        if not enrich_data.get("restaurants"):
-            enrich_data["restaurants"] = [{"name": "Local Favorite", "location": destinations[0], "cuisine_type": "Jordanian", "reason": "Authentic taste"}]
-        if not enrich_data.get("hidden_gems"):
-            enrich_data["hidden_gems"] = [{"name": "Secret Spot", "location": destinations[0], "description": "Beautiful view", "why_visit": "Unique local spot", "best_time": "Sunset"}]
-            
         if "map_data" not in plan:
             plan["map_data"] = {}
-        plan["map_data"]["restaurants"] = enrich_data["restaurants"]
-        plan["map_data"]["hidden_gems"] = enrich_data["hidden_gems"]
+        if enrich_data.get("restaurants"):
+            plan["map_data"]["restaurants"] = enrich_data["restaurants"]
+        if enrich_data.get("hidden_gems"):
+            plan["map_data"]["hidden_gems"] = enrich_data["hidden_gems"]
     except Exception as e:
         print("Enrichment failed:", e)
+
+    # --- GUARANTEED FALLBACK (always show something) ---
+    destinations = req_data.get("destinations", ["Amman"])
+    if "map_data" not in plan:
+        plan["map_data"] = {}
+    if not plan["map_data"].get("restaurants"):
+        plan["map_data"]["restaurants"] = [
+            {"name": "Hashem Restaurant", "location": "Amman", "rating": "4.8/5", "price_level": "$", "cuisine_type": "Jordanian", "recommended_dish": "Falafel & Hummus", "reason": "Iconic Amman institution loved by locals and tourists"},
+            {"name": "Sufra Restaurant", "location": destinations[0], "rating": "4.6/5", "price_level": "$$", "cuisine_type": "Jordanian", "recommended_dish": "Mansaf", "reason": "Authentic Jordanian home cooking in a beautiful setting"}
+        ]
+    if not plan["map_data"].get("hidden_gems"):
+        plan["map_data"]["hidden_gems"] = [
+            {"name": "Rainbow Street", "location": "Amman", "description": "Vibrant street with cafes, bookshops and amazing city views", "best_time": "Evening", "why_visit": "The heart of Amman's creative scene"},
+            {"name": "Wadi Mujib Viewpoint", "location": destinations[0], "description": "Stunning canyon views over the Dead Sea region", "best_time": "Sunrise", "why_visit": "One of Jordan's most breathtaking hidden viewpoints"}
+        ]
 
     return {"journey": plan}
 
